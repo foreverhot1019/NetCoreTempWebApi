@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Helpdesk.WebApi.Services.Base
+namespace NetCoreTemp.WebApi.Services.Base
 {
     public static class BaseExtension
     {

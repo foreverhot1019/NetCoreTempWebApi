@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.Extensions;
 
-namespace Helpdesk.WebApi.Models
+namespace NetCoreTemp.WebApi.Models
 {
     public class RoleMenu : BaseModel.BaseEntity
     {

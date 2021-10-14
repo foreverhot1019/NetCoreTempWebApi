@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Helpdesk.WebApi.Models;
-using Helpdesk.WebApi.Services.Base;
+using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Services.Base;
 
-namespace Helpdesk.WebApi.Services
+namespace NetCoreTemp.WebApi.Services
 {
     public interface IMenuService : IBaseService<Menu>
     {

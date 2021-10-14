@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using AutoMapper;
-using Helpdesk.WebApi.Models;
-using Helpdesk.WebApi.Models.BaseModel;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.Extensions;
 
-namespace Helpdesk.WebApi.Models.AutoMapper
+namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     /// <summary>
     /// 账户Dto
@@ -72,7 +72,7 @@ namespace Helpdesk.WebApi.Models.AutoMapper
                 .CreateMapper();
         }
 
-        internal static IMapper Mapper { get; }
+        public static IMapper Mapper { get; }
 
         /// <summary>
         /// 映射到ModelDto

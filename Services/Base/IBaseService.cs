@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Helpdesk.WebApi.Models.DatabaseContext;
-using Helpdesk.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Models.DatabaseContext;
+using NetCoreTemp.WebApi.Models.View_Model;
 
-namespace Helpdesk.WebApi.Services.Base
+namespace NetCoreTemp.WebApi.Services.Base
 {
-    public interface IBaseService<TEntity> where TEntity : class, Helpdesk.WebApi.Models.BaseModel.IEntity_
+    public interface IBaseService<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         /// <summary>
         /// 返回DynamoDBRepository 仓库
@@ -87,7 +87,7 @@ namespace Helpdesk.WebApi.Services.Base
     /// 动态搜索接口
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public interface IQueryByFilterRules<TEntity> where TEntity : class, Helpdesk.WebApi.Models.BaseModel.IEntity_
+    public interface IQueryByFilterRules<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         IQueryable<TEntity> QueryByFilterRules(IEnumerable<filterRule> filterRules);
     }

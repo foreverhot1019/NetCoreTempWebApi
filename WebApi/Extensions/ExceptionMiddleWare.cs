@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Helpdesk.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.AspNetCore.Http;
 
-namespace Helpdesk.WebApi.Extensions
+namespace NetCoreTemp.WebApi.Extensions
 {
     public class ExceptionMiddleWare : IMiddleware
     {

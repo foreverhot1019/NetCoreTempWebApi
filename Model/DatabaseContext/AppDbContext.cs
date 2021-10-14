@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Helpdesk.WebApi.Models;
+using NetCoreTemp.WebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Helpdesk.WebApi.Models.DatabaseContext
+namespace NetCoreTemp.WebApi.Models.DatabaseContext
 {
     public class AppDbContext : DbContext
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Helpdesk.WebApi.Models.BaseModel;
-using Helpdesk.WebApi.Models.EnumType;
+using NetCoreTemp.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.EnumType;
 using AutoMapper;
 
-namespace Helpdesk.WebApi.Models.AutoMapper
+namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class RoleDto : _BaseEntityDto
     {
@@ -55,7 +55,7 @@ namespace Helpdesk.WebApi.Models.AutoMapper
             }).CreateMapper();
         }
 
-        internal static IMapper Mapper { get; }
+        public static IMapper Mapper { get; }
 
         /// <summary>
         /// 映射到ModelDto

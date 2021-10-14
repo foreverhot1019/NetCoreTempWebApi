@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Helpdesk.WebApi.Models.AutoMapper
+namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public static class AddAutoMapper
     {
@@ -16,7 +16,7 @@ namespace Helpdesk.WebApi.Models.AutoMapper
         /// <returns></returns>
         public static IServiceCollection AddAutoMapperService(this IServiceCollection services)
         {
-            var AllType = System.Reflection.Assembly.Load("Helpdesk.WebApi.Models").GetTypes();
+            var AllType = System.Reflection.Assembly.Load("NetCoreTemp.WebApi.Models").GetTypes();
             var ArrProfileType = AllType.Where(x => !x.IsGenericType && x.IsSubclassOf(typeof(Profile)));
             services.AddAutoMapper(ArrProfileType.ToArray());
             //services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile));

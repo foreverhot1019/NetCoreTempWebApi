@@ -1,6 +1,6 @@
-﻿using Helpdesk.WebApi.Models;
-using Helpdesk.WebApi.Models.DatabaseContext;
-using Helpdesk.WebApi.Models.View_Model;
+﻿using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.DatabaseContext;
+using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,9 +9,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Helpdesk.WebApi.Services.Base
+namespace NetCoreTemp.WebApi.Services.Base
 {
-    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : class, Helpdesk.WebApi.Models.BaseModel.IEntity_
+    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         private readonly AppDbContext _context;
         private ILogger<BaseService<TEntity>> _logger;

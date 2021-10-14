@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using static Helpdesk.WebApi.Models.EnumType.EnumRepo;
+using static NetCoreTemp.WebApi.Models.EnumType.EnumRepo;
 
-namespace Helpdesk.WebApi.Models.View_Model
+namespace NetCoreTemp.WebApi.Models.View_Model
 {
     /// <summary>
     /// 搜索类

@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Model\Helpdesk.WebApi.Models.csproj" />
-    <ProjectReference Include="..\Services\Helpdesk.WebApi.Services.csproj" />
+    <ProjectReference Include="..\Model\NetCoreTemp.WebApi.Models.csproj" />
+    <ProjectReference Include="..\Services\NetCoreTemp.WebApi.Services.csproj" />
   </ItemGroup>
 
 

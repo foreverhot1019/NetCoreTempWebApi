@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Helpdesk.WebApi.Models;
-using Helpdesk.WebApi.Models.AutoMapper;
-using Helpdesk.WebApi.Models.Extensions;
-using Helpdesk.WebApi.Models.View_Model;
-using Helpdesk.WebApi.Services;
-using Helpdesk.WebApi.Services.Base;
+using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.AutoMapper;
+using NetCoreTemp.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Services;
+using NetCoreTemp.WebApi.Services.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Helpdesk.WebApi.Controllers
+namespace NetCoreTemp.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

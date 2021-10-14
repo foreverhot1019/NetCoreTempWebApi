@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Helpdesk.WebApi.Models.Extensions
+namespace NetCoreTemp.WebApi.Models.Extensions
 {
     public static class DateTimeHelper
     {

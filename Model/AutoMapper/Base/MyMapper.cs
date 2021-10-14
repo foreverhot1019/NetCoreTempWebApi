@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 
-namespace Helpdesk.WebApi.Models.AutoMapper
+namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     /// <summary>
     /// 统一转换

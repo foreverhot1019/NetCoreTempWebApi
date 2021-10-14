@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Helpdesk.WebApi.Models.EnumType;
+using NetCoreTemp.WebApi.Models.EnumType;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Helpdesk.WebApi.Controllers
+namespace NetCoreTemp.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -39,14 +39,14 @@ namespace Helpdesk.WebApi.Controllers
             List<EnumModelType> ArrEnumModelType = new List<EnumModelType>();
             try
             {
-                var namespaseStr = "Helpdesk.WebApi.Models.EnumType.EnumRepo";
+                var namespaseStr = "NetCoreTemp.WebApi.Models.EnumType.EnumRepo";
                 var EnumFullName = namespaseStr + "+" + enumName;
                 //获取缓存
                 if (!_cache.TryGetValue(EnumFullName, out ArrEnumModelType))
                 {
                     ArrEnumModelType = ArrEnumModelType ?? new List<EnumModelType>();
                     var AssEnum = Assembly.GetAssembly(typeof(EnumRepo));
-                    var etype = AssEnum.GetType($"Helpdesk.WebApi.Models.EnumType.EnumRepo+{enumName}");
+                    var etype = AssEnum.GetType($"NetCoreTemp.WebApi.Models.EnumType.EnumRepo+{enumName}");
                     Type type = AssEnum.GetType(EnumFullName);
                     if (type == null)
                         type = AssEnum.GetType(EnumFullName.Replace("+" + enumName, "." + enumName));

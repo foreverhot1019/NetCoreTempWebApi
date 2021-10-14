@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Caching;
 using System.Text;
-using Helpdesk.WebApi.Models.EnumType;
+using NetCoreTemp.WebApi.Models.EnumType;
 
-namespace Helpdesk.WebApi.Models.Extensions
+namespace NetCoreTemp.WebApi.Models.Extensions
 {
     public class CommonHelper
     {

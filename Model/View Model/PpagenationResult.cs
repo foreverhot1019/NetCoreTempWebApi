@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Helpdesk.WebApi.Models.View_Model
+namespace NetCoreTemp.WebApi.Models.View_Model
 {
     /// <summary>
     /// 翻页返回集合

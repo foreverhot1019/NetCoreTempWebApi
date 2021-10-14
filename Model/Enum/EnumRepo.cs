@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Helpdesk.WebApi.Models.EnumType
+namespace NetCoreTemp.WebApi.Models.EnumType
 {
     /// <summary>
     /// 枚举类型

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Helpdesk.WebApi.Models.BaseModel;
-using Helpdesk.WebApi.Models.EnumType;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.EnumType;
+using NetCoreTemp.WebApi.Models.Extensions;
 
-namespace Helpdesk.WebApi.Models
+namespace NetCoreTemp.WebApi.Models
 {
     public class Role : BaseEntity
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using AutoMapper;
-using Helpdesk.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.BaseModel;
 
-namespace Helpdesk.WebApi.Models.AutoMapper
+namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class RoleMenuDto : _BaseEntityDto
     {

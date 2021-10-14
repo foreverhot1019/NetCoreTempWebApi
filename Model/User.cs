@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Helpdesk.WebApi.Models.BaseModel;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.Extensions;
 
-namespace Helpdesk.WebApi.Models
+namespace NetCoreTemp.WebApi.Models
 {
     public class User : BaseEntity
     {

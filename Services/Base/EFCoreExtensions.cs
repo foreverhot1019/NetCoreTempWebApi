@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Helpdesk.WebApi.Services.Base
+namespace NetCoreTemp.WebApi.Services.Base
 {
     public static class EFCoreExtensions
     {

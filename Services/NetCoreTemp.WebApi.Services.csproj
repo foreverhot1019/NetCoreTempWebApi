@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Model\Helpdesk.WebApi.Models.csproj" />
+    <ProjectReference Include="..\Model\NetCoreTemp.WebApi.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Helpdesk.WebApi.Models.View_Model
+namespace NetCoreTemp.WebApi.Models.View_Model
 {
     /// <summary>
     /// Action返回数据

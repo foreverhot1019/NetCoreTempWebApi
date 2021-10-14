@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Helpdesk.WebApi.Services.Base
+namespace NetCoreTemp.WebApi.Services.Base
 {
     public static class AddServices
     {
@@ -15,7 +15,7 @@ namespace Helpdesk.WebApi.Services.Base
         /// <returns></returns>
         public static IServiceCollection AddCustomerServices(this IServiceCollection services)
         {
-            var AllType = System.Reflection.Assembly.Load("Helpdesk.WebApi.Services").GetTypes();
+            var AllType = System.Reflection.Assembly.Load("NetCoreTemp.WebApi.Services").GetTypes();
             //var type = typeof(BaseService<>);
             // && (x.IsSubclassOf(type) || x.IsInstanceOfType(type) ||x.IsAssignableFrom(type))
             var ArrServiceType = AllType.Where(x => !x.IsGenericType && x.BaseType?.Name.StartsWith("BaseService`1") == true);

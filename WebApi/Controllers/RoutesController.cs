@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Helpdesk.WebApi.Controllers
+namespace NetCoreTemp.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

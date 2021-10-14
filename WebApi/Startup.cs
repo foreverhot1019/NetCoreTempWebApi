@@ -10,27 +10,27 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Helpdesk.WebApi.Models.View_Model;
-using Helpdesk.WebApi.Models.AutoMapper;
-using Helpdesk.WebApi.Models.Extensions;
-using Helpdesk.WebApi.Models;
-using Helpdesk.WebApi.Extensions;
+using NetCoreTemp.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Models.AutoMapper;
+using NetCoreTemp.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Extensions;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Helpdesk.WebApi.Services;
+using NetCoreTemp.WebApi.Services;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
-using Helpdesk.WebApi.Services.Base;
+using NetCoreTemp.WebApi.Services.Base;
 using Microsoft.EntityFrameworkCore;
-using Helpdesk.WebApi.Models.DatabaseContext;
+using NetCoreTemp.WebApi.Models.DatabaseContext;
 
-namespace Helpdesk.WebApi
+namespace NetCoreTemp.WebApi
 {
     public class Startup
     {

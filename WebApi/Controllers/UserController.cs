@@ -4,24 +4,24 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Helpdesk.WebApi.Models;
+using NetCoreTemp.WebApi.Models;
 using Microsoft.Extensions.Logging;
-using Helpdesk.WebApi.Models.AutoMapper;
-using Helpdesk.WebApi.Models.View_Model;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.AutoMapper;
+using NetCoreTemp.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Models.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Helpdesk.WebApi.Services;
+using NetCoreTemp.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
-using Helpdesk.WebApi.Services.Base;
+using NetCoreTemp.WebApi.Services.Base;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Helpdesk.WebApi.Controllers
+namespace NetCoreTemp.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

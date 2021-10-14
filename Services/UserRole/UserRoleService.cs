@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Helpdesk.WebApi.Services.Base;
-using Helpdesk.WebApi.Models;
-using Helpdesk.WebApi.Models.View_Model;
-using Helpdesk.WebApi.Models.AutoMapper;
-using Helpdesk.WebApi.Models.DatabaseContext;
+using NetCoreTemp.WebApi.Services.Base;
+using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Models.AutoMapper;
+using NetCoreTemp.WebApi.Models.DatabaseContext;
 
-namespace Helpdesk.WebApi.Services
+namespace NetCoreTemp.WebApi.Services
 {
     public class UserRoleService : BaseService<UserRole>, IUserRoleService, IQueryByFilterRules<UserRole>
     {

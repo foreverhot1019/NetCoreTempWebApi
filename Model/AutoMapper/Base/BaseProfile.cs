@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.Extensions;
 
-namespace Helpdesk.WebApi.Models.AutoMapper
+namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class BaseProfile<TSource, TDestion> : Profile
-        where TSource : class, Helpdesk.WebApi.Models.BaseModel.IEntity_
-        where TDestion : class, Helpdesk.WebApi.Models.BaseModel._IEntityDto_
+        where TSource : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
+        where TDestion : class, NetCoreTemp.WebApi.Models.BaseModel._IEntityDto_
     {
         /// <summary>
         /// Entity到Destion转换表达式

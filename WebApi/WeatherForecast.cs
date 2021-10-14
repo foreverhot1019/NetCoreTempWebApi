@@ -1,6 +1,6 @@
 using System;
 
-namespace Helpdesk.WebApi
+namespace NetCoreTemp.WebApi
 {
     public class WeatherForecast
     {

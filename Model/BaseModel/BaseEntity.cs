@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Helpdesk.WebApi.Models.Extensions;
-using static Helpdesk.WebApi.Models.EnumType.EnumRepo;
+using NetCoreTemp.WebApi.Models.Extensions;
+using static NetCoreTemp.WebApi.Models.EnumType.EnumRepo;
 
-namespace Helpdesk.WebApi.Models.BaseModel
+namespace NetCoreTemp.WebApi.Models.BaseModel
 {
     //sealed 不能被继承
     //internal 当前程序集

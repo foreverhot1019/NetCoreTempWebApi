@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Helpdesk.WebApi.Models.Extensions;
+using NetCoreTemp.WebApi.Models.Extensions;
 
-namespace Helpdesk.WebApi.Models
+namespace NetCoreTemp.WebApi.Models
 {
     public class Menu : BaseModel.BaseEntity
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Helpdesk.WebApi.Models.BaseModel
+namespace NetCoreTemp.WebApi.Models.BaseModel
 {
     public interface IEntity<TKey> : IEntity_
     {

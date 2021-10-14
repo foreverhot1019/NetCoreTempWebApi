@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpdesk.WebApi.Models", "Model\Helpdesk.WebApi.Models.csproj", "{2270AAD7-4BD1-4D61-AF26-C42D45425364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreTemp.WebApi.Models", "Model\NetCoreTemp.WebApi.Models.csproj", "{2270AAD7-4BD1-4D61-AF26-C42D45425364}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpdesk.WebApi.Services", "Services\Helpdesk.WebApi.Services.csproj", "{0B61FB37-871F-4EEB-A388-BEA55D5EB719}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreTemp.WebApi.Services", "Services\NetCoreTemp.WebApi.Services.csproj", "{0B61FB37-871F-4EEB-A388-BEA55D5EB719}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpdesk.WebApi", "WebApi\Helpdesk.WebApi.csproj", "{37049A00-B6FB-4A5B-BB1B-217EE99B8DC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreTemp.WebApi", "WebApi\NetCoreTemp.WebApi.csproj", "{37049A00-B6FB-4A5B-BB1B-217EE99B8DC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

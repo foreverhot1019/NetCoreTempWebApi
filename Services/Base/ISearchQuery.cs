@@ -5,13 +5,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Helpdesk.WebApi.Services.Base
+namespace NetCoreTemp.WebApi.Services.Base
 {
     /// <summary>
     /// 自定义搜索接口
     /// </summary>
     /// <typeparam name="TEntity">实体</typeparam>
-    public interface ISearchQuery<TEntity> where TEntity : class, Helpdesk.WebApi.Models.BaseModel.IEntity_
+    public interface ISearchQuery<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         Expression<Func<TEntity, bool>> Query();
         Expression<Func<TEntity, bool>> And(Expression<Func<TEntity, bool>> query);
@@ -24,7 +24,7 @@ namespace Helpdesk.WebApi.Services.Base
     /// 自定义搜索
     /// </summary>
     /// <typeparam name="TEntity">实体</typeparam>
-    public abstract class SearchQuery<TEntity> : ISearchQuery<TEntity> where TEntity : class, Helpdesk.WebApi.Models.BaseModel.IEntity_
+    public abstract class SearchQuery<TEntity> : ISearchQuery<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         private Expression<Func<TEntity, bool>> _query;
 

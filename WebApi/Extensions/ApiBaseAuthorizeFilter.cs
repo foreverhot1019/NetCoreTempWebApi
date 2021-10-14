@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Helpdesk.WebApi.Models.View_Model;
+using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Helpdesk.WebApi.Extensions
+namespace NetCoreTemp.WebApi.Extensions
 {
     public class ApiBaseAuthorizeFilter : AuthorizeFilter //IAsyncAuthorizationFilter //IAuthorizationFilter
     {
