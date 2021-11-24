@@ -31,6 +31,9 @@ using Microsoft.EntityFrameworkCore;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
 using StackExchange.Redis;
 using RedisHelp;
+using Quartz;
+using Quartz.Impl;
+using System.Reflection;
 
 namespace NetCoreTemp.WebApi
 {
@@ -195,9 +198,48 @@ namespace NetCoreTemp.WebApi
             });
             services.AddMemoryCache();
 
+            //RedisCache
+            services.AddStackExchangeRedisCache(options =>
+            {
+                var redisConnectionString = Configuration.GetSection("RedisConnection")?.Value ?? "localhost:6379,allowAdmin=true,connectTimeout=1000,connectRetry=3";
+                options.Configuration = redisConnectionString;
+
+                var assemblyName = Assembly.GetExecutingAssembly().GetName();
+                options.InstanceName = assemblyName.Name;
+            });
+
             #region redis
 
             services.AddRedisMultiplexer(Configuration);
+
+            #endregion
+
+            #region Polly
+
+            services.AddHttpClient("WXKF", client =>
+            {
+                var WXKFBaseUrl = Configuration.GetValue<string>("WXKFBaseUrl")?? "https://qyapi.weixin.qq.com/cgi-bin/kf/";
+                client.BaseAddress = new Uri(WXKFBaseUrl);
+            }).SetHandlerLifetime(TimeSpan.FromHours(12));
+            //微信获取Token
+            services.AddHttpClient("WXAccessToken", client =>
+            {
+                var WXKFBaseUrl = "https://qyapi.weixin.qq.com/cgi-bin/";
+                client.BaseAddress = new Uri(WXKFBaseUrl);
+            }).SetHandlerLifetime(TimeSpan.FromHours(12));
+
+            #endregion
+
+            #region QuartzJobScheduler
+
+            // Add Quartz services
+            services.AddScoped<ISchedulerFactory>(x => {
+
+                var factory = new StdSchedulerFactory();
+                return factory;
+            });
+            //QuartzJobScheduler调度器
+            services.AddSingleton<QuartzJobScheduler.JobScheduler>();
 
             #endregion
         }

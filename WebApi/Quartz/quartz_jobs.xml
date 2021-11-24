@@ -1,0 +1,171 @@
+﻿<!-- This file contains job definitions in schema version 2.0 format -->
+<job-scheduling-data version="2.0" xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+  <schedule>
+    <!--<job>
+      <name>WechatOverdueJob</name>
+      <description>微信号到期续费通知</description>
+      <job-type>Helpdesk.Jobs.WechatOverdueJob, Helpdesk</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <cron>
+        <name>WechatOverdueTrigger</name>
+        <job-name>WechatOverdueJob</job-name>
+        <cron-expression>0 0 10 * * ?</cron-expression>
+      </cron>
+    </trigger>
+    <job>
+      <name>MpDataCubeJob</name>
+      <description>下载前一天的微信统计数据</description>
+      <job-type>Helpdesk.Jobs.MpDataCubeJob, Helpdesk</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <cron>
+        <name>MpDataCubeTrigger</name>
+        <job-name>MpDataCubeJob</job-name>
+        <cron-expression>0 0 10 * * ?</cron-expression>
+      </cron>
+    </trigger>-->
+    
+    <!--微信客服会话数据处理Job-->
+    <job>
+      <!--作业名称，同一个 group 中作业名称不能相同-->
+      <name>WXKFDialog2DBJob</name>
+      <!--作业分组名称，表示该作业所属分组-->
+      <group>jGP_WXKF2DataBase</group>
+      <!--描述-->
+      <description>将微信客服会话数据从Redis，存储到数据库中</description>
+      <!--指定作业将调用的作业实现类，格式为：命名空间.类名,程序集名称-->
+      <job-type>Helpdesk.QuartzJobScheduler.Job.WXKFDialog2DBJob,Helpdesk</job-type>
+      <!--任务完成后是否依然保存到数据库，默认为false-->
+      <durable>true</durable>
+      <!--应用或服务重启之后是否忽略过期任务，默认为false-->
+      <recover>false</recover>
+      <!--传递给IJobExecutionContext 上下文数据-->
+      <job-data-map>
+        <entry>
+          <key>start</key>
+          <value>2021-09-01T00:00:00+08:00</value>
+        </entry>
+        <entry>
+          <key>TestData</key>
+          <value>ValTestData</value>
+        </entry>
+      </job-data-map>
+    </job>
+    <trigger>
+      <!--简单的触发器-->
+      <simple>
+        <!--触发器名称，同一个 group 中作业名称不能相同-->
+        <name>Tr_WXKFDialog2DBJob</name>
+        <!--触发器分组名称，表示该触发器所属分组-->
+        <group>GP_WXKF2DataBase</group>
+        <!--描述-->
+        <description>将微信客服数据从Redis，存储到数据库中</description>
+        <!--作业名，触发哪个作业-->
+        <job-name>WXKFDialog2DBJob</job-name>
+        <!--要调度的作业分组名称，必须与 job 节点中的 group 相同-->
+        <job-group>jGP_WXKF2DataBase</job-group>
+        <!--错过了触发 必须在 cron-expression 节点前
+          DoNothing：不触发立即执行。等待下次Cron触发频率到达时刻开始按照Cron频率依次执行。即如果错过了某次执行，直接忽略。
+          FireOnceNow：以当前时间为触发频率立刻触发一次执行，然后按照Cron频率依次执行。-->
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <!--simple无法使用start-time；开始作业的 utc 时间，北京时间需要+08:00，例如：<start-time>2017-12-01T08:00:00+08:00</start-time>，表示北京时间2017年12月1日上午8:00开始执行。
+          注意：服务启动或重启时都会检测此属性。若没有设置此属性，服务会根据 cron-expression 的规则执行作业调度；
+          若 start-time 的时间小于当前时间，服务启动后会忽略 cron-expression 的设置，立即执行一次调度，之后再根据 cron-expression 执行作业调度；
+          若大于当前时间，服务会等到当前时间等于 start-time 的时间才开始执行，并根据 cron-expression 执行作业调度。
+          如果没有特殊要求，可以忽略该属性。-->
+        <!--<start-time>2021-12-01T00:00:00+08:00</start-time>-->
+        <!--作业重复执行次数，-1表示无限制重复执行，3 表示作业重复执行三次-->
+        <repeat-count>-1</repeat-count>
+        <!--每1000毫秒执行一次-->
+        <repeat-interval>1000</repeat-interval>
+      </simple>
+    </trigger>
+    <!--微信客服消息数据处理Job-->
+    <job>
+      <!--作业名称，同一个 group 中作业名称不能相同-->
+      <name>WXKFDialogMsg2DBJob</name>
+      <!--作业分组名称，表示该作业所属分组-->
+      <group>jGP_WXKF2DataBase</group>
+      <!--描述-->
+      <description>将微信客服会话消息数据从Redis，存储到数据库中</description>
+      <!--指定作业将调用的作业实现类，格式为：命名空间.类名,程序集名称-->
+      <job-type>Helpdesk.QuartzJobScheduler.Job.WXKFDialogMsg2DBJob,Helpdesk</job-type>
+      <!--任务完成后是否依然保存到数据库，默认为false-->
+      <durable>true</durable>
+      <!--应用或服务重启之后是否忽略过期任务，默认为false-->
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <!--复杂触发器，使用 cron-expression 设置触发器的行为 cron生成器：https://cron.qqe2.com/ -->
+      <cron>
+        <!--触发器名称，同一个 group 中作业名称不能相同-->
+        <name>Tr_WXKFDialogMsg2DBJob</name>
+        <!--触发器分组名称，表示该触发器所属分组-->
+        <group>GP_WXKF2DataBase</group>
+        <!--作业名，触发哪个作业，必须与 job 节点中的 group 相同-->
+        <job-name>WXKFDialogMsg2DBJob</job-name>
+        <!--要调度的作业分组名称，必须与 job 节点中的 group 相同-->
+        <job-group>jGP_WXKF2DataBase</job-group>
+        <!--开始作业的 utc 时间，北京时间需要+08:00，例如：<start-time>2017-12-01T08:00:00+08:00</start-time>，表示北京时间2017年12月1日上午8:00开始执行。
+          注意：服务启动或重启时都会检测此属性。若没有设置此属性，服务会根据 cron-expression 的规则执行作业调度；
+          若 start-time 的时间小于当前时间，服务启动后会忽略 cron-expression 的设置，立即执行一次调度，之后再根据 cron-expression 执行作业调度；
+          若大于当前时间，服务会等到当前时间等于 start-time 的时间才开始执行，并根据 cron-expression 执行作业调度。
+          如果没有特殊要求，可以忽略该属性。-->
+        <!--<start-time>2021-12-01T00:00:00+08:00</start-time>-->
+        <!--错过了触发 必须在 cron-expression 节点前
+          DoNothing：不触发立即执行。等待下次Cron触发频率到达时刻开始按照Cron频率依次执行。即如果错过了某次执行，直接忽略。
+          FireOnceNow：以当前时间为触发频率立刻触发一次执行，然后按照Cron频率依次执行。-->
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <!--每5秒执行一次-->
+        <cron-expression>*/5 * * * * ?</cron-expression>
+      </cron>
+    </trigger>
+    <job>
+      <!--作业名称，同一个 group 中作业名称不能相同-->
+      <name>WXKFMsgCleanJob</name>
+      <!--作业分组名称，表示该作业所属分组-->
+      <group>jGP_WXKFMsgClean</group>
+      <!--描述-->
+      <description>清理Redis中的微信客服数据</description>
+      <!--指定作业将调用的作业实现类，格式为：命名空间.类名,程序集名称-->
+      <job-type>Helpdesk.QuartzJobScheduler.Job.WXKFMsgCleanJob,Helpdesk</job-type>
+      <!--任务完成后是否依然保存到数据库，默认为false-->
+      <durable>true</durable>
+      <!--应用或服务重启之后是否忽略过期任务，默认为false-->
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <!--复杂触发器，使用 cron-expression 设置触发器的行为 cron生成器：https://cron.qqe2.com/ -->
+      <cron>
+        <!--触发器名称，同一个 group 中作业名称不能相同-->
+        <name>Tr_WXKFMsgCleanJob</name>
+        <!--触发器分组名称，表示该触发器所属分组-->
+        <group>Gp_WXKFMsgClean</group>
+        <!--作业名，触发哪个作业，必须与 job 节点中的 group 相同-->
+        <job-name>WXKFMsgCleanJob</job-name>
+        <!--要调度的作业分组名称，必须与 job 节点中的 group 相同-->
+        <job-group>jGP_WXKFMsgClean</job-group>
+        <!--开始作业的 utc 时间，北京时间需要+08:00，例如：<start-time>2017-12-01T08:00:00+08:00</start-time>，表示北京时间2017年12月1日上午8:00开始执行。
+          注意：服务启动或重启时都会检测此属性。若没有设置此属性，服务会根据 cron-expression 的规则执行作业调度；
+          若 start-time 的时间小于当前时间，服务启动后会忽略 cron-expression 的设置，立即执行一次调度，之后再根据 cron-expression 执行作业调度；
+          若大于当前时间，服务会等到当前时间等于 start-time 的时间才开始执行，并根据 cron-expression 执行作业调度。
+          如果没有特殊要求，可以忽略该属性。-->
+        <start-time>2021-09-01T00:00:00+08:00</start-time>
+        <!--错过了触发 必须在 cron-expression 节点前
+          DoNothing：不触发立即执行。等待下次Cron触发频率到达时刻开始按照Cron频率依次执行。即如果错过了某次执行，直接忽略。
+          FireOnceNow：以当前时间为触发频率立刻触发一次执行，然后按照Cron频率依次执行。-->
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <!--每小时执行一次-->
+        <cron-expression>0 0 */1 * * ? *</cron-expression>
+      </cron>
+    </trigger>
+  </schedule>
+</job-scheduling-data>
