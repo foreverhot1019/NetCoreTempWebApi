@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Model\NetCoreTemp.WebApi.Models.csproj" />
+    <ProjectReference Include="..\RedisHelp\RedisHelp.csproj" />
     <ProjectReference Include="..\Services\NetCoreTemp.WebApi.Services.csproj" />
   </ItemGroup>
 

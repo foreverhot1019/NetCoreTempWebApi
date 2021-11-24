@@ -29,6 +29,8 @@ using System.Text.Json;
 using NetCoreTemp.WebApi.Services.Base;
 using Microsoft.EntityFrameworkCore;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
+using StackExchange.Redis;
+using RedisHelp;
 
 namespace NetCoreTemp.WebApi
 {
@@ -179,12 +181,25 @@ namespace NetCoreTemp.WebApi
                 x.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
             });
             //¿çÓò
-            services.AddCors(options => {
-                options.AddPolicy("localhost", policy => {
-                    policy.WithOrigins("http://publics3.gileadchina.cn", "http://localhost:9526", "http://localhost:9527", "http://localhost:5000", "https://localhost:5001").AllowAnyHeader().AllowAnyMethod();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("localhost", policy =>
+                {
+                    policy.WithOrigins(new string[] {
+                        "http://localhost:9526",
+                        "http://localhost:9527",
+                        "http://localhost:5000",
+                        "https://localhost:5001"
+                    }).AllowAnyHeader().AllowAnyMethod();
                 });
             });
             services.AddMemoryCache();
+
+            #region redis
+
+            services.AddRedisMultiplexer(Configuration);
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

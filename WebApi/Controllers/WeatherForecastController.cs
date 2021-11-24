@@ -21,11 +21,15 @@ namespace NetCoreTemp.WebApi.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly RedisHelp.RedisHelper _redisHelper;
 
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, RedisHelp.RedisHelper redisHelper)
         {
             _logger = logger;
+            _redisHelper = redisHelper;
+            ////测试 订阅key事件
+            //_redisHelper.SubscribeKeyExpire();
         }
 
         [HttpGet]
