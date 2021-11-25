@@ -6,7 +6,7 @@ using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models
 {
-    public class User : BaseEntity
+    public sealed class User : BaseEntity
     {
         private string id;
 

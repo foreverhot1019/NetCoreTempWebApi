@@ -27,7 +27,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
         /// <summary>
         /// Redis缓存
         /// </summary>
-        readonly RedisHelp.RedisHelper redisHelper;
+        readonly RedisHelp.RedisHelper _redisHelper;
 
         /// <summary>
         /// 微信访问助手
@@ -102,7 +102,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
             return (msgid, result);
         });
 
-        public WXKFDialogMsg2DBJob(RedisHelp.RedisHelper _redisHelper,
+        public WXKFDialogMsg2DBJob(RedisHelp.RedisHelper redisHelper,
             //IHttpClientFactory httpClientFactory, 
             WXFLHttpClientHelper wXFLHttpClientHelper, ILogger<WXKFDialogMsg2DBJob> logger)
         {
@@ -155,24 +155,24 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
             {
                 //记录已结束的且没有消息的会话
                 var NoMsg_EndedDialo = $"NoMsg_EndedDialog:{wxDialogue.WXKF_DialogId}";
-                var date = await redisHelper.StringGetAsync(NoMsg_EndedDialo);
+                var date = await _redisHelper.StringGetAsync(NoMsg_EndedDialo);
                 if (string.IsNullOrEmpty(date))
                 {
-                    var DictMsgDialog = await redisHelper.HashGetAllAsync<string, WXKFDialog>(newWXMessageDialogRedisKey);
+                    var DictMsgDialog = await _redisHelper.HashGetAllAsync<string, WXKFDialog>(newWXMessageDialogRedisKey);
                     var ArrMsg = DictMsgDialog.Where(x => x.Value.dialogId == wxDialogue.WXKF_DialogId).Select(x => new { key = x.Key, msg = funcGetMsg(x.Key) });
                     var QArrMsg = ArrMsg.Where(x => x.msg.sendTime > 0);
                     if (QArrMsg.Any())
                     {
                         var minSendTime = (long?)QArrMsg?.Min(x => x.msg.sendTime) ?? DateTime.Now.AddHours(12).to_Long();
                         var maxSendTime = (long?)QArrMsg?.Max(x => x.msg.sendTime) ?? DateTime.Now.to_Long();
-                        var ArrWXKFMessage = await redisHelper.SortedSetRangeByScoreAsync<WXKFMessage>(ALLMsgListRedisKey, minSendTime ?? 0, maxSendTime ?? 0);
+                        var ArrWXKFMessage = await _redisHelper.SortedSetRangeByScoreAsync<WXKFMessage>(ALLMsgListRedisKey, minSendTime ?? 0, maxSendTime ?? 0);
                         var ArrMsgId = ArrMsg.Select(x => x.msg.msgId);
                         retWXKFMessage = ArrWXKFMessage.Where(x => ArrMsgId.Contains(x.msgid)).OrderBy(x => x.send_time).ToList();
                         #region 记录已结束的且没有消息的会话 1小时过期
 
                         if (!retWXKFMessage.Any() && wxDialogue.DialogueState == "finished")
                         {
-                            await redisHelper.StringSetAsync(NoMsg_EndedDialo, DateTime.Now, TimeSpan.FromHours(1));
+                            await _redisHelper.StringSetAsync(NoMsg_EndedDialo, DateTime.Now, TimeSpan.FromHours(1));
                         }
 
                         #endregion

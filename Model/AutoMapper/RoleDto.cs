@@ -46,6 +46,7 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
     /// </summary>
     public static class RoleMapper
     {
+        //只有在同一程序集的文件中，内部类型或成员才可访问
         static RoleMapper()
         {
             Mapper = new MapperConfiguration(cfg =>

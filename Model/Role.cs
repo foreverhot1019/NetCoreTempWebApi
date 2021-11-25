@@ -8,7 +8,7 @@ using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models
 {
-    public class Role : BaseEntity
+    public sealed class Role : BaseEntity
     {
         private string id = "-";
 

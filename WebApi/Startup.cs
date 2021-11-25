@@ -34,6 +34,11 @@ using RedisHelp;
 using Quartz;
 using Quartz.Impl;
 using System.Reflection;
+using Quartz.Spi;
+using NetCoreTemp.WebApi.QuartzJobScheduler;
+using NetCoreTemp.WebApi.QuartzJobScheduler.Job;
+using NetCoreTemp.WebApi.WXKF;
+using NetCoreTemp.WebApi.QuartzScheduler;
 
 namespace NetCoreTemp.WebApi
 {
@@ -216,30 +221,50 @@ namespace NetCoreTemp.WebApi
 
             #region Polly
 
+            //不验证 SSL证书
+            System.Net.Http.HttpClientHandler clientHandler = new System.Net.Http.HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
             services.AddHttpClient("WXKF", client =>
             {
-                var WXKFBaseUrl = Configuration.GetValue<string>("WXKFBaseUrl")?? "https://qyapi.weixin.qq.com/cgi-bin/kf/";
+                var WXKFBaseUrl = Configuration.GetValue<string>("WXKFBaseUrl") ?? "https://qyapi.weixin.qq.com/cgi-bin/kf/";
                 client.BaseAddress = new Uri(WXKFBaseUrl);
-            }).SetHandlerLifetime(TimeSpan.FromHours(12));
+            }).SetHandlerLifetime(TimeSpan.FromHours(12)).ConfigurePrimaryHttpMessageHandler(_ => clientHandler);
             //微信获取Token
             services.AddHttpClient("WXAccessToken", client =>
             {
                 var WXKFBaseUrl = "https://qyapi.weixin.qq.com/cgi-bin/";
                 client.BaseAddress = new Uri(WXKFBaseUrl);
-            }).SetHandlerLifetime(TimeSpan.FromHours(12));
+            }).SetHandlerLifetime(TimeSpan.FromHours(12)).ConfigurePrimaryHttpMessageHandler(_ => clientHandler);
 
             #endregion
+            services.AddScoped<WXFLHttpClientHelper>();
+            services.AddScoped<WXKFAssignHandler>();
 
             #region QuartzJobScheduler
 
-            // Add Quartz services
-            services.AddScoped<ISchedulerFactory>(x => {
-
-                var factory = new StdSchedulerFactory();
-                return factory;
+            services.AddQuartzHostedService(x =>
+            {
+                x.WaitForJobsToComplete = true;
             });
-            //QuartzJobScheduler调度器
-            services.AddSingleton<QuartzJobScheduler.JobScheduler>();
+            services.AddQuartz(q =>
+            {
+                q.SchedulerName = "MyQuartzScheduler";
+                //使用jobs配置文件
+                q.UseXmlSchedulingConfiguration(x => { 
+                    x.Files = new [] { "~/Quartz/quartz_jobs.xml" };
+                    x.ScanInterval = TimeSpan.FromMinutes(1);
+                    x.FailOnFileNotFound = true;
+                    x.FailOnSchedulingError = true;
+                });
+                q.UseMicrosoftDependencyInjectionJobFactory();
+            });
+            services.AddQuartzServer(option =>
+            {
+                option.WaitForJobsToComplete = true;
+            });
+
+            //手动实现IJobFactory
+            //services.AddQuartzSchedulerService();
 
             #endregion
         }

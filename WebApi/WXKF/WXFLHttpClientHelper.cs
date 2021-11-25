@@ -79,7 +79,7 @@ namespace NetCoreTemp.WebApi.WXKF
             {
                 var res = await GetToken();
                 return res.access_token;
-            }).Result;
+            })?.Result;
         }
 
         /// <summary>

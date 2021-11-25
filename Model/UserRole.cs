@@ -6,7 +6,7 @@ using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models
 {
-    public class UserRole : BaseModel.BaseEntity
+    public sealed class UserRole : BaseModel.BaseEntity
     {
         public UserRole()
         {

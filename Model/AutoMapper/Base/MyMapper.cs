@@ -18,10 +18,12 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         {
             _Mapper = mapper;
         }
+
         public TSource ToSource(TDestination entity)
         {
             return _Mapper.Map<TSource>(entity);
         }
+
         public TDestination ToDestination(TSource model)
         {
             return _Mapper.Map<TDestination>(model);

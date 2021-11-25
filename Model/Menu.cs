@@ -8,7 +8,7 @@ using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models
 {
-    public class Menu : BaseModel.BaseEntity
+    public sealed class Menu : BaseModel.BaseEntity
     {
         public Menu()
         {

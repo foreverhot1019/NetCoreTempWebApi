@@ -10,7 +10,7 @@ namespace NetCoreTemp.WebApi.Models.View_Model
     /// <summary>
     /// 搜索类
     /// </summary>
-    public class filterRule
+    public sealed class filterRule
     {
         [Display(Name = "字段", Description = "字段")]
         public string field { get; set; }

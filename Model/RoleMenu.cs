@@ -6,7 +6,7 @@ using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models
 {
-    public class RoleMenu : BaseModel.BaseEntity
+    public sealed class RoleMenu : BaseModel.BaseEntity
     {
         public RoleMenu()
         {

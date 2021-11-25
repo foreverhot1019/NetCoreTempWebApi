@@ -9,6 +9,7 @@ using Quartz.Impl;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Quartz.Spi;
 using Quartz.Logging;
 
 namespace NetCoreTemp.WebApi.QuartzJobScheduler
@@ -20,12 +21,14 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler
         //调度器工厂
         public ISchedulerFactory _schedulerFactory;
         private readonly ILogger<JobScheduler> log;
+        IJobFactory _jobFactory;
 
-        public JobScheduler(ILogger<JobScheduler> logger, ISchedulerFactory schedulerFactory)
+        public JobScheduler(ILogger<JobScheduler> logger, ISchedulerFactory schedulerFactory, IJobFactory jobFactory)
         {
             log = logger;
             _schedulerFactory = schedulerFactory;
-            //
+            _jobFactory = jobFactory;
+            //Quartz增加日志
             Quartz.Logging.LogProvider.SetCurrentLogProvider(new QuartzLogProvider(log));
         }
 
@@ -38,10 +41,14 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler
             try
             {
                 _scheduler = await _schedulerFactory.GetScheduler();
-                log.LogInformation("Quarz调度器启动");
-                var name = _scheduler.SchedulerName;
-                var arr = _scheduler.GetJobGroupNames();
-                await _scheduler.Start();
+                if (!_scheduler.IsStarted)
+                {
+                    log.LogInformation("Quarz调度器启动");
+                    var name = _scheduler.SchedulerName;
+                    var arr = _scheduler.GetJobGroupNames();
+                    _scheduler.JobFactory = _jobFactory;
+                    await _scheduler.Start();
+                }
 
                 //// define the job and tie it to our HelloJob class
                 //IJobDetail job = JobBuilder.Create<Job.WXKF2DataBaseJob>()
@@ -62,7 +69,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler
             }
             catch (Exception ex)
             {
-                log.LogError("Quarz调度器启动", ex);
+                log.LogError("Quarz调度器启动失败：", ex);
             }
         }
 

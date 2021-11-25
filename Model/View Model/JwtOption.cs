@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NetCoreTemp.WebApi.Models.View_Model
 {
-    public class JwtOption
+    public sealed class JwtOption
     {
         /// <summary>
         /// 服务端密钥

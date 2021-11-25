@@ -27,7 +27,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
         /// <summary>
         /// Redis缓存
         /// </summary>
-        readonly RedisHelp.RedisHelper redisHelper;
+        readonly RedisHelp.RedisHelper _redisHelper;
 
         /// <summary>
         /// 微信访问助手
@@ -67,7 +67,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
 
         #endregion
 
-        public WXKFDialog2DBJob(RedisHelp.RedisHelper _redisHelper,
+        public WXKFDialog2DBJob(RedisHelp.RedisHelper redisHelper,
             //IHttpClientFactory httpClientFactory, 
             WXFLHttpClientHelper wXFLHttpClientHelper, ILogger<WXKFDialog2DBJob> logger)
         {
@@ -117,7 +117,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
                 _logger.LogInformation($"--------Execute:{DateTime.Now.ToString()}");
                 #region 获取所有WXKF 会话
 
-                var ArrWXDialog = await redisHelper.SortedSetRangeByRankAsync<WXKFDialog>(ALLWXDialogRedisKey);
+                var ArrWXDialog = await _redisHelper.SortedSetRangeByRankAsync<WXKFDialog>(ALLWXDialogRedisKey);
                 if (ArrWXDialog.Any())
                 {
                     //所有微信客服接待人员
@@ -130,7 +130,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
 
                 #region 获取所有WXKF 结束的会话
 
-                var ALLWXDialogEnding = await redisHelper.SortedSetRangeByRankAsync<WXKFDialog>(ALLWXDialogEndingRedisKey);
+                var ALLWXDialogEnding = await _redisHelper.SortedSetRangeByRankAsync<WXKFDialog>(ALLWXDialogEndingRedisKey);
                 if (ALLWXDialogEnding.Any())
                 {
                     var retUpdate = 1;
@@ -139,7 +139,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
                         //清除已处理的数据
                         foreach (var _wxkfDialogEnding in ALLWXDialogEnding)
                         {
-                            var remove_tf = await redisHelper.SortedSetRemoveAsync(ALLWXDialogEndingRedisKey, _wxkfDialogEnding);
+                            var remove_tf = await _redisHelper.SortedSetRemoveAsync(ALLWXDialogEndingRedisKey, _wxkfDialogEnding);
                             if (!remove_tf)
                                 _logger.LogError($"删除所有微信结束的会话数据错误：{JsonConvert.SerializeObject(_wxkfDialogEnding)}");
 

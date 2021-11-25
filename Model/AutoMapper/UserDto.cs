@@ -72,7 +72,8 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
                 .CreateMapper();
         }
 
-        public static IMapper Mapper { get; }
+        //只有在同一程序集的文件中，内部类型或成员才可访问
+        internal static IMapper Mapper { get; }
 
         /// <summary>
         /// 映射到ModelDto

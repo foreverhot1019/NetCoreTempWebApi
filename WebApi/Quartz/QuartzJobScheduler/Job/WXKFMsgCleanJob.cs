@@ -27,7 +27,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
         /// <summary>
         /// Redis缓存
         /// </summary>
-        readonly RedisHelp.RedisHelper redisHelper;
+        readonly RedisHelp.RedisHelper _redisHelper;
 
         /// <summary>
         /// 微信访问助手
@@ -78,7 +78,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
 
         #endregion
 
-        public WXKFMsgCleanJob(RedisHelp.RedisHelper _redisHelper,
+        public WXKFMsgCleanJob(RedisHelp.RedisHelper redisHelper,
             //IHttpClientFactory httpClientFactory, 
             WXFLHttpClientHelper wXFLHttpClientHelper, ILogger<WXKFMsgCleanJob> logger)
         {
@@ -109,12 +109,12 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
             var end24TimeSpan = nowDate.AddHours(-24).to_Long() ?? 0;
             var end48TimeSpan = nowDate.AddHours(-48).to_Long() ?? 0;
             //所有消息 当天0点往前48小时
-            await redisHelper.SortedSetRemoveRangeByScoreAsync(ALLMsgListRedisKey, double.NegativeInfinity, end48TimeSpan);
+            await _redisHelper.SortedSetRemoveRangeByScoreAsync(ALLMsgListRedisKey, double.NegativeInfinity, end48TimeSpan);
             //已处理消息 现在往前24小时
             var end24TimeSpan4now = DateTime.Now.AddHours(-24).to_Long() ?? 0;
-            await redisHelper.SortedSetRemoveRangeByScoreAsync(MsgAnalysisedListRedisKey, double.NegativeInfinity, end24TimeSpan4now);
+            await _redisHelper.SortedSetRemoveRangeByScoreAsync(MsgAnalysisedListRedisKey, double.NegativeInfinity, end24TimeSpan4now);
             //未结束的会话,自动结束执行记录 现在往前24小时
-            await redisHelper.SortedSetRemoveRangeByScoreAsync(AllcleanKey, double.NegativeInfinity, end24TimeSpan4now);
+            await _redisHelper.SortedSetRemoveRangeByScoreAsync(AllcleanKey, double.NegativeInfinity, end24TimeSpan4now);
 
             //所有微信客服接待人员
             var WXKFServicerRes = await _WXFLHttpClientHelper.GetWXKFAccountServicerList();
@@ -123,7 +123,7 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
             {
                 //当天0点往前48小时，客服正在接单的接待列表(SortedSet)
                 var newInServingRedisKey = string.Format(InServingRedisKey, servicer.userid);
-                await redisHelper.SortedSetRemoveRangeByScoreAsync(newInServingRedisKey, double.NegativeInfinity, end48TimeSpan);
+                await _redisHelper.SortedSetRemoveRangeByScoreAsync(newInServingRedisKey, double.NegativeInfinity, end48TimeSpan);
             }
             #region 每晚00 清空未结束会话的数据
 
@@ -132,16 +132,16 @@ namespace NetCoreTemp.WebApi.QuartzJobScheduler.Job
             MaxHour = DateTime.Now.Hour;
 #endif
             var newcleanKey = string.Format(cleanKey, DateTime.Now.Date.ToString("yyyyMMdd"));
-            var cleanDate = await redisHelper.StringGetAsync(newcleanKey);
+            var cleanDate = await _redisHelper.StringGetAsync(newcleanKey);
             //错过执行时间后，执行一次
             if (DateTime.Now.Hour <= MaxHour || (DateTime.Now.Hour > MaxHour && string.IsNullOrWhiteSpace(cleanDate)))
             {
                 if (string.IsNullOrWhiteSpace(cleanDate))
                 {
-                    var tf = await redisHelper.StringSetAsync(newcleanKey, DateTime.Now.ToString("yyyyMMdd HH:mm:ss"), TimeSpan.FromHours(24));
+                    var tf = await _redisHelper.StringSetAsync(newcleanKey, DateTime.Now.ToString("yyyyMMdd HH:mm:ss"), TimeSpan.FromHours(24));
                     if (tf)
                     {
-                        tf = await redisHelper.SortedSetAddAsync(AllcleanKey, newcleanKey, DateTime.Now.to_Long() ?? 0);
+                        tf = await _redisHelper.SortedSetAddAsync(AllcleanKey, newcleanKey, DateTime.Now.to_Long() ?? 0);
                         if (tf)
                         {
                             #region 关闭未结束的会话

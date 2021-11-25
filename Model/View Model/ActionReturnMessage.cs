@@ -8,7 +8,7 @@ namespace NetCoreTemp.WebApi.Models.View_Model
     /// <summary>
     /// Action返回数据
     /// </summary>
-    public class ActionReturnMessage
+    public sealed class ActionReturnMessage
     {
         public ActionReturnMessage()
         {

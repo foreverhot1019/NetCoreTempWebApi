@@ -7,6 +7,8 @@ using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NetCoreTemp.WebApi.Models.AutoMapper;
+using NetCoreTemp.WebApi.QuartzJobScheduler;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -22,12 +24,19 @@ namespace NetCoreTemp.WebApi.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly RedisHelp.RedisHelper _redisHelper;
+        private readonly JobScheduler _jobScheduler;
+
+        //private readonly MyMapper<Models.Role, Models.AutoMapper.RoleDto>  _myMapper;
 
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, RedisHelp.RedisHelper redisHelper)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, RedisHelp.RedisHelper redisHelper
+            //,MyMapper<Models.Role, Models.AutoMapper.RoleDto> myMapper
+            , JobScheduler jobScheduler
+            )
         {
             _logger = logger;
             _redisHelper = redisHelper;
+            //_myMapper = myMapper;
             ////测试 订阅key事件
             //_redisHelper.SubscribeKeyExpire();
         }

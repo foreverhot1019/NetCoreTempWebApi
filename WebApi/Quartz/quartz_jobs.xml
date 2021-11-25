@@ -4,35 +4,6 @@
     <overwrite-existing-data>true</overwrite-existing-data>
   </processing-directives>
   <schedule>
-    <!--<job>
-      <name>WechatOverdueJob</name>
-      <description>微信号到期续费通知</description>
-      <job-type>Helpdesk.Jobs.WechatOverdueJob, Helpdesk</job-type>
-      <durable>true</durable>
-      <recover>false</recover>
-    </job>
-    <trigger>
-      <cron>
-        <name>WechatOverdueTrigger</name>
-        <job-name>WechatOverdueJob</job-name>
-        <cron-expression>0 0 10 * * ?</cron-expression>
-      </cron>
-    </trigger>
-    <job>
-      <name>MpDataCubeJob</name>
-      <description>下载前一天的微信统计数据</description>
-      <job-type>Helpdesk.Jobs.MpDataCubeJob, Helpdesk</job-type>
-      <durable>true</durable>
-      <recover>false</recover>
-    </job>
-    <trigger>
-      <cron>
-        <name>MpDataCubeTrigger</name>
-        <job-name>MpDataCubeJob</job-name>
-        <cron-expression>0 0 10 * * ?</cron-expression>
-      </cron>
-    </trigger>-->
-    
     <!--微信客服会话数据处理Job-->
     <job>
       <!--作业名称，同一个 group 中作业名称不能相同-->
@@ -42,7 +13,7 @@
       <!--描述-->
       <description>将微信客服会话数据从Redis，存储到数据库中</description>
       <!--指定作业将调用的作业实现类，格式为：命名空间.类名,程序集名称-->
-      <job-type>Helpdesk.QuartzJobScheduler.Job.WXKFDialog2DBJob,Helpdesk</job-type>
+      <job-type>NetCoreTemp.WebApi.QuartzJobScheduler.Job.WXKFDialog2DBJob,NetCoreTemp.WebApi</job-type>
       <!--任务完成后是否依然保存到数据库，默认为false-->
       <durable>true</durable>
       <!--应用或服务重启之后是否忽略过期任务，默认为false-->
@@ -97,7 +68,7 @@
       <!--描述-->
       <description>将微信客服会话消息数据从Redis，存储到数据库中</description>
       <!--指定作业将调用的作业实现类，格式为：命名空间.类名,程序集名称-->
-      <job-type>Helpdesk.QuartzJobScheduler.Job.WXKFDialogMsg2DBJob,Helpdesk</job-type>
+      <job-type>NetCoreTemp.WebApi.QuartzJobScheduler.Job.WXKFDialogMsg2DBJob,NetCoreTemp.WebApi</job-type>
       <!--任务完成后是否依然保存到数据库，默认为false-->
       <durable>true</durable>
       <!--应用或服务重启之后是否忽略过期任务，默认为false-->
@@ -136,7 +107,7 @@
       <!--描述-->
       <description>清理Redis中的微信客服数据</description>
       <!--指定作业将调用的作业实现类，格式为：命名空间.类名,程序集名称-->
-      <job-type>Helpdesk.QuartzJobScheduler.Job.WXKFMsgCleanJob,Helpdesk</job-type>
+      <job-type>NetCoreTemp.WebApi.QuartzJobScheduler.Job.WXKFMsgCleanJob,NetCoreTemp.WebApi</job-type>
       <!--任务完成后是否依然保存到数据库，默认为false-->
       <durable>true</durable>
       <!--应用或服务重启之后是否忽略过期任务，默认为false-->

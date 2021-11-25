@@ -7,7 +7,7 @@ namespace NetCoreTemp.WebApi.Models.View_Model
     /// <summary>
     /// 翻页返回集合
     /// </summary>
-    public class PpagenationResult
+    public sealed class PpagenationResult
     {
         public PpagenationResult()
         {
