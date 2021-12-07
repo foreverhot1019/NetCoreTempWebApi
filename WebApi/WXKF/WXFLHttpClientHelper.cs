@@ -119,7 +119,7 @@ namespace NetCoreTemp.WebApi.WXKF
                     return false;
             })
             //.Or<TimeoutRejectedException>() // 若超时则抛出此异常
-            .Or<UnauthorizedAccessException>() //若超时则抛出此异常
+            .Or<UnauthorizedAccessException>() //若抛出401异常
             .WaitAndRetryAsync(new[] { //重试3次
                  TimeSpan.FromSeconds(1),//第一次重试间隔 1秒
                  TimeSpan.FromSeconds(2),//第二次重试间隔 2秒

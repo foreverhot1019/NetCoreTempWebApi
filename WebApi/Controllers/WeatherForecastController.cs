@@ -24,14 +24,14 @@ namespace NetCoreTemp.WebApi.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly RedisHelp.RedisHelper _redisHelper;
-        private readonly JobScheduler _jobScheduler;
+        //private readonly JobScheduler _jobScheduler;
 
         //private readonly MyMapper<Models.Role, Models.AutoMapper.RoleDto>  _myMapper;
 
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger, RedisHelp.RedisHelper redisHelper
             //,MyMapper<Models.Role, Models.AutoMapper.RoleDto> myMapper
-            , JobScheduler jobScheduler
+            //, JobScheduler jobScheduler
             )
         {
             _logger = logger;

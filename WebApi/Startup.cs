@@ -193,11 +193,13 @@ namespace NetCoreTemp.WebApi
             {
                 options.AddPolicy("localhost", policy =>
                 {
+                    var http = Configuration.GetValue<string>("Kestrel.Endpoints.Http") ?? "http://localhost:5000";
+                    var tls = Configuration.GetValue<string>("Kestrel.Endpoints.Https") ?? "https://localhost:5001";
                     policy.WithOrigins(new string[] {
                         "http://localhost:9526",
                         "http://localhost:9527",
-                        "http://localhost:5000",
-                        "https://localhost:5001"
+                        http,
+                        tls
                     }).AllowAnyHeader().AllowAnyMethod();
                 });
             });
@@ -237,33 +239,35 @@ namespace NetCoreTemp.WebApi
             }).SetHandlerLifetime(TimeSpan.FromHours(12)).ConfigurePrimaryHttpMessageHandler(_ => clientHandler);
 
             #endregion
+
             services.AddScoped<WXFLHttpClientHelper>();
             services.AddScoped<WXKFAssignHandler>();
 
             #region QuartzJobScheduler
 
-            services.AddQuartzHostedService(x =>
-            {
-                x.WaitForJobsToComplete = true;
-            });
-            services.AddQuartz(q =>
-            {
-                q.SchedulerName = "MyQuartzScheduler";
-                //使用jobs配置文件
-                q.UseXmlSchedulingConfiguration(x => { 
-                    x.Files = new [] { "~/Quartz/quartz_jobs.xml" };
-                    x.ScanInterval = TimeSpan.FromMinutes(1);
-                    x.FailOnFileNotFound = true;
-                    x.FailOnSchedulingError = true;
-                });
-                q.UseMicrosoftDependencyInjectionJobFactory();
-            });
-            services.AddQuartzServer(option =>
-            {
-                option.WaitForJobsToComplete = true;
-            });
+            //1.自动IJobFactory
+            //services.AddQuartzHostedService(x =>
+            //{
+            //    x.WaitForJobsToComplete = true;
+            //});
+            //services.AddQuartz(q =>
+            //{
+            //    q.SchedulerName = "MyQuartzScheduler";
+            //    //使用jobs配置文件
+            //    q.UseXmlSchedulingConfiguration(x => { 
+            //        x.Files = new [] { "~/Quartz/quartz_jobs.xml" };
+            //        x.ScanInterval = TimeSpan.FromMinutes(1);
+            //        x.FailOnFileNotFound = true;
+            //        x.FailOnSchedulingError = true;
+            //    });
+            //    q.UseMicrosoftDependencyInjectionJobFactory();
+            //});
+            //services.AddQuartzServer(option =>
+            //{
+            //    option.WaitForJobsToComplete = true;
+            //});
 
-            //手动实现IJobFactory
+            //2.手动实现IJobFactory（必须将IJob先注入DI）
             //services.AddQuartzSchedulerService();
 
             #endregion
@@ -278,7 +282,7 @@ namespace NetCoreTemp.WebApi
             }
             loggerFactory.AddLog4Net();
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             //跨域
             app.UseCors("localhost");
