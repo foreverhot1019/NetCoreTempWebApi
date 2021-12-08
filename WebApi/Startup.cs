@@ -245,7 +245,7 @@ namespace NetCoreTemp.WebApi
 
             #region QuartzJobScheduler
 
-            //1.自动IJobFactory
+            //1.自动IJobFactory使用MicrosoftDependencyInjectionJobFactory包实现
             //services.AddQuartzHostedService(x =>
             //{
             //    x.WaitForJobsToComplete = true;
@@ -282,7 +282,7 @@ namespace NetCoreTemp.WebApi
             }
             loggerFactory.AddLog4Net();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             //跨域
             app.UseCors("localhost");
