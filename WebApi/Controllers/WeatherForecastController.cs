@@ -7,8 +7,11 @@ using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NetCoreTemp.WebApi.Models.AutoMapper;
 using NetCoreTemp.WebApi.QuartzJobScheduler;
+using Microsoft.Extensions.DependencyInjection;
+using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.AutoMapper;
+using AutoMapper;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -24,19 +27,25 @@ namespace NetCoreTemp.WebApi.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly RedisHelp.RedisHelper _redisHelper;
-        //private readonly JobScheduler _jobScheduler;
 
-        //private readonly MyMapper<Models.Role, Models.AutoMapper.RoleDto>  _myMapper;
+        private readonly MyMapper<User, UserDto> _myMapper;
+        private readonly IMapper _mapper;
 
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, RedisHelp.RedisHelper redisHelper
-            //,MyMapper<Models.Role, Models.AutoMapper.RoleDto> myMapper
-            //, JobScheduler jobScheduler
-            )
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,
+            RedisHelp.RedisHelper redisHelper,
+            IServiceProvider serviceProvider)
         {
             _logger = logger;
             _redisHelper = redisHelper;
-            //_myMapper = myMapper;
+            var mapper = serviceProvider.GetService<IMapper>();
+            if (mapper != null)
+                _mapper = mapper;
+
+            var myMapper = serviceProvider.GetService<MyMapper<User, UserDto>>();
+            if (myMapper != null)
+                _myMapper = myMapper;
+
             ////测试 订阅key事件
             //_redisHelper.SubscribeKeyExpire();
         }
@@ -57,12 +66,12 @@ namespace NetCoreTemp.WebApi.Controllers
             #region autoMapper测试
 
             //dynamic foo = new ExpandoObject();
-            //foo.Type = "TestType222";
-            //foo.Name = "TestName222";
-            //foo.Sort = 2;
-            //foo.Remark = "Test_Remark222";
-            //foo.CreateUserId = "CreateUserId222";
-            //foo.CreateUserName = "CreateUserName222";
+            //foo.Type = "TestType111";
+            //foo.Name = "TestName111";
+            //foo.Sort = 1;
+            //foo.Remark = "Test_Remark111";
+            //foo.CreateUserId = "CreateUserId111";
+            //foo.CreateUserName = "CreateUserName111";
             //var exp = new ExpandoObject();
             //var x = exp as IDictionary<string, Object>;
             //x.Add("Name", "Menu_Name");
@@ -78,14 +87,24 @@ namespace NetCoreTemp.WebApi.Controllers
             //    { "CreateUserName", "CreateUserName222"},
             //    { "ArrMenu",new List<Dictionary<string, object>>{new Dictionary<string, object>{ { "Name", "Menu_Name222" } } } }
             //};
-            //var vb = new Models.Role
+            //var vb = new Role
             //{
             //    //Type = "TestType111",
             //    Name = "TestName111",
             //    Sort = 1,
             //    Remark = "Test_Remark111"
             //};
-            //var aa = Models.AutoMapper.UserMapper.Mapper.Map(ss, vb);
+            //var dt0 = vb.ToDto();
+            //var aa = _mapper.Map(ss, vb);
+            //var bb = _mapper.Map(foo, vb);
+
+            //UserDto userDto = new UserDto
+            //{
+            //    _ID = Guid.NewGuid().ToString(),
+            //    _Name = "Test",
+            //    _Roles = new List<string> { "A", "B", "C" }
+            //};
+            //var user = _myMapper.ToSource(userDto);
 
             #endregion
 

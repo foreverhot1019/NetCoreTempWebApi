@@ -18,9 +18,19 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         {
             var AllType = System.Reflection.Assembly.Load("NetCoreTemp.WebApi.Models").GetTypes();
             var ArrProfileType = AllType.Where(x => !x.IsGenericType && x.IsSubclassOf(typeof(Profile)));
-            services.AddAutoMapper(ArrProfileType.ToArray());
-            //services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile));
-            //services.AddSingleton(typeof(MyMapper<,>));
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                foreach (Type type in ArrProfileType)
+                    mc.AddProfile(type);
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddScoped(typeof(MyMapper<,>));
+
+            ////AutoMapper.Extensions.Microsoft.DenpendencyInjection方式
+            //services.AddAutoMapper(ArrProfileType.ToArray());
 
             return services;
         }

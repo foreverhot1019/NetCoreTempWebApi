@@ -5,16 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MessageLogs\**" />
+    <EmbeddedResource Remove="MessageLogs\**" />
+    <None Remove="MessageLogs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LinqKit.Core" Version="1.1.27" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Model\NetCoreTemp.WebApi.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MessageLogs\" />
   </ItemGroup>
 
 </Project>

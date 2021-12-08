@@ -32,7 +32,11 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         public List<string> _Roles { get; set; }
     }
 
-    public class UserProfile:Profile// : BaseProfile<User, UserDto>
+    /// <summary>
+    /// AutoMapper轮廓
+    /// AutoMapper.Extensions.Microsoft.DenpendencyInjection方式 不能使用 继承BaseProfile<UserRole, UserRoleDto>方式
+    /// </summary>
+    public class UserProfile : BaseProfile<User, UserDto>
     {
         Func<string, IEnumerable<string>> string2List = new Func<string, IEnumerable<string>>(str =>
         {
@@ -43,24 +47,24 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         });
         public UserProfile()
         {
-            //this.Src2DesMapperExp
-            //    .ForMember(des => des._Roles, opts => opts.MapFrom(src => string2List(src.Roles)));
-            //this.Des2SrcMapperExp
-            //    .ForMember(src => src.Roles, opts => opts.MapFrom(des => des._Roles == null ? "" : string.Join(",", des._Roles)));
-
-            ClearPrefixes();
-            RecognizePrefixes("_");//去除前缀_
-            var mapper = CreateMap<User, UserDto>()
-                .ForMember(des => des._EntityGuid, opts => opts.Ignore())
-                .ForMember(des => des._CreateDate, opts => opts.MapFrom(src => src.CreateDate.to_DateTime().Value))
-                .ForMember(des => des._ModifyDate, opts => opts.MapFrom(src => src.ModifyDate.toDateTime()))
-                .ForMember(des => des._Roles, opts => opts.MapFrom(src => string2List(src.Roles)))
-                .ReverseMap()
-                .ForMember(src => src.CreateDate, opts => opts.MapFrom(des => des._CreateDate.to_Long()))
-                .ForMember(src => src.ModifyDate, opts => opts.MapFrom(des => des._ModifyDate.toLong()))
+            this.Src2DesMapperExp
+                .ForMember(des => des._Roles, opts => opts.MapFrom(src => string2List(src.Roles)));
+            this.Des2SrcMapperExp
                 .ForMember(src => src.Roles, opts => opts.MapFrom(des => des._Roles == null ? "" : string.Join(",", des._Roles)));
-            //SourceMemberNamingConvention = new LowerUnderscoreNamingConvention();
-            //DestinationMemberNamingConvention = new PascalCaseNamingConvention(); //将CreateMap 等等放在这里
+
+            //ClearPrefixes();
+            //RecognizePrefixes("_");//去除前缀_
+            //var mapper = CreateMap<User, UserDto>()
+            //    .ForMember(des => des._EntityGuid, opts => opts.Ignore())
+            //    .ForMember(des => des._CreateDate, opts => opts.MapFrom(src => src.CreateDate.to_DateTime().Value))
+            //    .ForMember(des => des._ModifyDate, opts => opts.MapFrom(src => src.ModifyDate.toDateTime()))
+            //    .ForMember(des => des._Roles, opts => opts.MapFrom(src => string2List(src.Roles)))
+            //    .ReverseMap()
+            //    .ForMember(src => src.CreateDate, opts => opts.MapFrom(des => des._CreateDate.to_Long()))
+            //    .ForMember(src => src.ModifyDate, opts => opts.MapFrom(des => des._ModifyDate.toLong()))
+            //    .ForMember(src => src.Roles, opts => opts.MapFrom(des => des._Roles == null ? "" : string.Join(",", des._Roles)));
+            ////SourceMemberNamingConvention = new LowerUnderscoreNamingConvention();
+            ////DestinationMemberNamingConvention = new PascalCaseNamingConvention(); //将CreateMap 等等放在这里
         }
     }
 

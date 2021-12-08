@@ -25,7 +25,6 @@ namespace NetCoreTemp.WebApi.Controllers
         private RoleService _roleService;
         private RoleMenuService _roleMenuService;
 
-
         public MenuController(ILogger<MenuController> logger, MenuService menuService, RoleService roleService, RoleMenuService roleMenuService)
         {
             _logger = logger;

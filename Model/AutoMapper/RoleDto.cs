@@ -5,6 +5,7 @@ using System.Text;
 using NetCoreTemp.WebApi.Models.BaseModel;
 using NetCoreTemp.WebApi.Models.EnumType;
 using AutoMapper;
+using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
@@ -38,8 +39,42 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         public RoleProfile()
         {
             Src2DesMapperExp.ForMember(des => des._ArrMenu, opts => opts.MapFrom(src => src.ArrMenu));
+            Des2SrcMapperExp.ForMember(des => des.ArrMenu, opts => opts.MapFrom(src => src._ArrMenu));
         }
     }
+
+    ////AutoMapper.Extensions.Microsoft.DenpendencyInjection方式 不能使用 继承BaseProfile<UserRole, UserRoleDto>方式
+    //public class RoleProfile : Profile
+    //{
+    //    /// <summary>
+    //    /// Entity到Destion转换表达式
+    //    /// </summary>
+    //    protected IMappingExpression<Role, RoleDto> Src2DesMapperExp;
+    //    /// <summary>
+    //    /// Destion到Entity转换表达式
+    //    /// </summary>
+    //    protected IMappingExpression<RoleDto, Role> Des2SrcMapperExp;
+
+    //    public RoleProfile()
+    //    {
+    //        ClearPrefixes();//去除前缀
+    //        RecognizePrefixes("_");//识别前缀_
+    //        Src2DesMapperExp = CreateMap<Role, RoleDto>()
+    //            .ForMember(des => des._EntityGuid, opts => opts.Ignore())
+    //            .ForMember(des => des._CreateDate, opts => opts.MapFrom(src => src.CreateDate.to_DateTime().Value))
+    //            .ForMember(des => des._ModifyDate, opts => opts.MapFrom(src => src.ModifyDate.toDateTime()))
+    //            .ForMember(des => des._ArrMenu, opts => opts.MapFrom(src => src.ArrMenu));
+    //        Des2SrcMapperExp = Src2DesMapperExp.ReverseMap()
+    //            .ForMember(src => src.CreateDate, opts => opts.MapFrom(des => des._CreateDate.to_Long()))
+    //            .ForMember(src => src.ModifyDate, opts => opts.MapFrom(des => des._ModifyDate.toLong()))
+    //            .ForMember(des => des.ArrMenu, opts => opts.MapFrom(src => src._ArrMenu));
+    //        //排除相同值的字段不更新，，以便entity字段不设为Modified
+    //        Des2SrcMapperExp.ForAllMembers(opts => opts.Condition((des, src, srcMember, desMember) => srcMember != desMember));
+
+    //        //SourceMemberNamingConvention = new LowerUnderscoreNamingConvention();
+    //        //DestinationMemberNamingConvention = new PascalCaseNamingConvention(); //将CreateMap 等等放在这里
+    //    }
+    //}
 
     /// <summary>
     /// 映射
