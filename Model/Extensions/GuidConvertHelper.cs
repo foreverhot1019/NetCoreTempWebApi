@@ -8,7 +8,7 @@ namespace NetCoreTemp.WebApi.Models.Extensions
     /// <summary>
     /// .Net-Guid&Oracle-Guid转换
     /// </summary>
-    public class GuidConvertHelper
+    public static class GuidConvertHelper
     {
         #region .Net和Oracle的Guid转换
 

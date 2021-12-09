@@ -16,7 +16,8 @@ namespace NetCoreTemp.WebApi.Models.BaseModel
     {
         //[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "主键", Description = "主键")]
-        [Required, MaxLength(50)]
+        [Required]
+        //[MaxLength(50)]
         public virtual Guid ID { get { return (Guid)_ID; } set { _ID = value; } }
 
         [NotMapped]
@@ -27,7 +28,8 @@ namespace NetCoreTemp.WebApi.Models.BaseModel
         public virtual UseStatusEnum Status { get; set; } = (UseStatusEnum)1;
 
         [Display(Name = "新增人ID", Description = "新增人ID")]
-        [MaxLength(50)]
+        [Required]
+        //[MaxLength(50)]
         public Guid CreateUserId { get; set; }
 
         [Display(Name = "新增人", Description = "新增人")]
@@ -38,7 +40,8 @@ namespace NetCoreTemp.WebApi.Models.BaseModel
         public virtual long CreateDate { get; set; } = DateTime.Now.to_Long().Value;
 
         [Display(Name = "修改人ID", Description = "修改人ID")]
-        [MaxLength(50)]
+        [Required]
+        //[MaxLength(50)]
         public Guid ModifyUserId { get; set; }
 
         [Display(Name = "修改人", Description = "修改人")]

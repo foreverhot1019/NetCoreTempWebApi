@@ -121,6 +121,17 @@ namespace NetCoreTemp.WebApi.Controllers
             //roleQuery.WithFilterRule(filters);
             //var q = roleQuery.Query();
 
+            var user = new User
+            {
+                Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+                Roles = "1,2,3",
+                CreateUserId = Guid.Empty,
+                ModifyUserId = Guid.Empty
+            };
+            ModelState.Clear();
+            TryValidateModel(user);
+            var s = ModelState.IsValid;
+
             #endregion
 
             return Ok(Arr);
