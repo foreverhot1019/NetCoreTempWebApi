@@ -8,44 +8,56 @@ using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models
 {
-    public sealed class Menu : BaseModel.BaseEntity
+    public class Menu : BaseModel.BaseEntity
     {
         public Menu()
         {
-            //Children = new HashSet<Menu>();
+            ChildrenMenu = new HashSet<Menu>();
         }
 
-        private string id;
-
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "主键", Description = "主键")]
-        [Required, MaxLength(50)]
-        public override string ID
+        [Required]
+        public override Guid ID
         {
-            get
-            {
-                if (id == "-")
-                    id = $"{Type}#{DateTime.Now.to_Long().ToString()}";
-                return id;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value) || value == "-")
-                    id = value;
-                else
-                {
-                    var profix = Type + "#";
-                    if (value.IndexOf(profix) != 0)
-                        id = Type + "#" + value;
-                    else
-                        id = value;
-                }
-            }
-        }
+            get;
+            set;
+        } = Guid.NewGuid();
 
-        private string Region { get; set; } = "Menu";
+        #region DynamoDB 主键（string：类型#排序值）
 
-        [Display(Name = "类型", Description = "类型")]
-        public string Type { get; } = "Menu";
+        //private string id;
+        //[Display(Name = "主键", Description = "主键")]
+        //[Required, MaxLength(50)]
+        //public override string ID
+        //{
+        //    get
+        //    {
+        //        if (id == "-")
+        //            id = $"{Type}#{DateTime.Now.to_Long().ToString()}";
+        //        return id;
+        //    }
+        //    set
+        //    {
+        //        if (string.IsNullOrEmpty(value) || value == "-")
+        //            id = value;
+        //        else
+        //        {
+        //            var profix = Type + "#";
+        //            if (value.IndexOf(profix) != 0)
+        //                id = Type + "#" + value;
+        //            else
+        //                id = value;
+        //        }
+        //    }
+        //}
+
+        //private string Region { get; set; } = "Menu";
+
+        //[Display(Name = "类型", Description = "类型")]
+        //public string Type { get; } = "Menu";
+
+        #endregion
 
         [Display(Name = "隐藏菜单", Description = "隐藏菜单")]
         public bool Hidden { get; set; }
@@ -85,18 +97,20 @@ namespace NetCoreTemp.WebApi.Models
 
         [Display(Name = "上级菜单", Description = "上级菜单")]
         [Required, StringLength(50)]
-        public string ParentMenuId { get; set; } = "-";
+        public Guid ParentMenuId { get; set; } = Guid.Empty;
+
+        //[Display(Name = "权限集合", Description = "权限集合")]
+        //[StringLength(500)]
+        //public string Roles { get; set; }
 
         [Display(Name = "权限集合", Description = "权限集合")]
-        [StringLength(500)]
-        public string Roles { get; set; }
+        public virtual ICollection<Role> ArrRole { get; set; }
 
-        //[DynamoDBIgnore]
-        //[Display(Name = "上级菜单", Description = "上级菜单")]
-        //[ForeignKey("ParentMenuId")]
-        //public Menu ParentMenu { get; set; }
+        [Display(Name = "上级菜单", Description = "上级菜单")]
+        [ForeignKey("ParentMenuId")]
+        public Menu ParentMenu { get; set; }
 
         [Display(Name = "子菜单", Description = "子菜单")]
-        public IEnumerable<Menu> Children { get; set; }
+        public virtual ICollection<Menu> ChildrenMenu { get; set; }
     }
 }

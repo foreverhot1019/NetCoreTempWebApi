@@ -30,6 +30,9 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
 
         [Display(Name = "账户权限", Description = "账户权限")]
         public List<string> _Roles { get; set; }
+
+        [Display(Name = "账户权限", Description = "账户权限")]
+        public IEnumerable<Role> _ArrRole { get; set; }
     }
 
     /// <summary>
@@ -48,9 +51,11 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         public UserProfile()
         {
             this.Src2DesMapperExp
-                .ForMember(des => des._Roles, opts => opts.MapFrom(src => string2List(src.Roles)));
+                .ForMember(dto => dto._Roles, opts => opts.MapFrom(src => string2List(src.Roles)))
+                .ForMember(dto => dto._ArrRole, opts => opts.MapFrom(src => src.ArrRole));
             this.Des2SrcMapperExp
-                .ForMember(src => src.Roles, opts => opts.MapFrom(des => des._Roles == null ? "" : string.Join(",", des._Roles)));
+                .ForMember(src => src.Roles, opts => opts.MapFrom(dto => dto._Roles == null ? "" : string.Join(",", dto._Roles)))
+                .ForMember(src => src.ArrRole, opts => opts.MapFrom(dto => dto._ArrRole));
 
             //ClearPrefixes();
             //RecognizePrefixes("_");//去除前缀_

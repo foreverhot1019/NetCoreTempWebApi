@@ -10,9 +10,6 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class MenuDto : _BaseEntityDto
     {
-        [Display(Name = "类型", Description = "类型")]
-        public string _Type { get; } = "Menu";
-
         [Display(Name = "隐藏菜单", Description = "隐藏菜单")]
         public bool _Hidden { get; set; }
 
@@ -51,12 +48,15 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         [Required, StringLength(50)]
         public string _ParentMenuId { get; set; } = "-";
 
+        //[Display(Name = "权限集合", Description = "权限集合")]
+        //[StringLength(500)]
+        //public string _Roles { get; set; }
+
         [Display(Name = "权限集合", Description = "权限集合")]
-        [StringLength(500)]
-        public string _Roles { get; set; }
+        public IEnumerable<Role> _ArrRole { get; set; }
 
         [Display(Name = "子菜单", Description = "子菜单")]
-        public IEnumerable<MenuDto> _Children { get; set; }
+        public IEnumerable<MenuDto> _ChildrenMenu { get; set; }
     }
 
     /// <summary>
@@ -66,6 +66,8 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
     {
         public MenuProfile()
         {
+            Src2DesMapperExp.ForMember(dto => dto._ArrRole, opts => opts.MapFrom(src => src.ArrRole));
+            Des2SrcMapperExp.ForMember(src => src.ArrRole, opts => opts.MapFrom(dto => dto._ArrRole));
         }
     }
 

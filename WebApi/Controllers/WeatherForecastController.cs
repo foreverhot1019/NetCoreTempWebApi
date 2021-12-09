@@ -108,6 +108,21 @@ namespace NetCoreTemp.WebApi.Controllers
 
             #endregion
 
+            #region SearchQuery测试
+
+            //var filters = new List<filterRule> {
+            //    new filterRule{  field="CreateUserId", value = "aaa"},
+            //    new filterRule{  field="CreateUserName", value = "bbb"},
+            //    new filterRule{  field="CreateDate", value = "bbb"},
+            //    new filterRule{  field="_CreateDate", value = "2021-12-09"},
+            //    new filterRule{  field="CreateDate_", value = "2021-12-09"},
+            //};
+            //var roleQuery = new Services.RoleQuery();
+            //roleQuery.WithFilterRule(filters);
+            //var q = roleQuery.Query();
+
+            #endregion
+
             return Ok(Arr);
         }
 

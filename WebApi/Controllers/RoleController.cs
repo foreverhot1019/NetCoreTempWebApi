@@ -41,17 +41,18 @@ namespace NetCoreTemp.WebApi.Controllers
         /// <returns></returns>
         private IEnumerable<Menu> GetMenus(IEnumerable<Menu> AllMenu, string ParentId = "-")
         {
+            Guid.TryParse(ParentId, out Guid gid);
             //第一层
-            var retMenus = AllMenu.Where(x => x.ParentMenuId == ParentId).Select(x => x);
+            var retMenus = AllMenu.Where(x => x.ParentMenuId == gid).Select(x => x);
             //排除已使用
-            var _AllMenu = AllMenu.Where(x => x.ParentMenuId != ParentId).Select(x => x);
+            var _AllMenu = AllMenu.Where(x => x.ParentMenuId != gid).Select(x => x);
 
             foreach (var menu in retMenus)
             {
                 if (AllMenu.Any(x => x.ParentMenuId == menu.ID))
                 {
                     //ArrUseId.Add(menu.ID);
-                    menu.Children = GetMenus(_AllMenu, menu.ID).ToArray();
+                    menu.ChildrenMenu = GetMenus(_AllMenu, menu.ID.ToString()).ToArray();
                 }
             }
 
@@ -66,7 +67,7 @@ namespace NetCoreTemp.WebApi.Controllers
         /// <param name="limit">每页条数</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<PpagenationResult> Get(string searhFilters = null,int page =0, int limit = 10)
+        public async Task<PpagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
         {
             List<filterRule> filterRules = new List<filterRule>();
             if (!string.IsNullOrEmpty(searhFilters))
@@ -102,7 +103,7 @@ namespace NetCoreTemp.WebApi.Controllers
             foreach (var role in ArrRole)
             {
                 var roleAllMenu = ArrMenu.Where(x => ArrRoleMenu.Where(n => n.RoleId == role.ID).Select(n => n.MenuId).Contains(x.ID));
-                role.ArrMenu = GetMenus(roleAllMenu);
+                role.ArrMenu = GetMenus(roleAllMenu).ToList();
             }
 
             return new PpagenationResult
@@ -261,7 +262,8 @@ namespace NetCoreTemp.WebApi.Controllers
             if (roles.Any())
             {
                 var role = roles.FirstOrDefault();
-                if (!string.IsNullOrEmpty(role.ID))
+
+                if (role.ID != Guid.Empty)
                 {
                     return Ok(role);
                 }
@@ -278,16 +280,16 @@ namespace NetCoreTemp.WebApi.Controllers
         public async Task<IActionResult> Post(RoleDto roleDto)
         {
             var role = roleDto.ToEntity();
-            if (string.IsNullOrEmpty(role.ID))
-                role.ID = DateTime.Now.to_Long().ToString();
+            if (role.ID == Guid.Empty)
+                role.ID = Guid.NewGuid();
             await _roleService.Insert(role);
             if (roleDto._ArrMenu != null && roleDto._ArrMenu.Any())
             {
                 var roleMenufilter = new List<filterRule>
                 {
-                        new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
+                    new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
                     new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" },
-                    new filterRule{ field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID }
+                    new filterRule{ field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID.ToString() }
                 };
                 var roleMenus = await _roleMenuService.QueryByFilterRules(roleMenufilter).ToListAsync();
 
@@ -308,11 +310,11 @@ namespace NetCoreTemp.WebApi.Controllers
                 var inMenuIds = roleMenus.Select(x => x.MenuId);
                 var Inserts = roleDto._ArrMenu.Where(x => !inMenuIds.Contains(x._ID)).Select(x => new RoleMenu
                 {
-                    ID = DateTime.Now.to_Long().ToString() + new Random().Next(0, 999).ToString("000"),
+                    ID = Guid.NewGuid(),//DateTime.Now.to_Long().ToString() + new Random().Next(0, 999).ToString("000"),
                     RoleId = role.ID,
                     MenuId = x._ID,
                     CreateDate = DateTime.Now.to_Long().Value,
-                    CreateUserId = User.Identity.Name,
+                    CreateUserId = Guid.Empty,//User.Identity.Name,
                     CreateUserName = User.Identity.Name
                 });
                 if (Inserts.Any())
@@ -351,13 +353,13 @@ namespace NetCoreTemp.WebApi.Controllers
             if (roles.Any())
             {
                 var role = roles.FirstOrDefault();
-                if (!string.IsNullOrEmpty(role.ID))
+                if (role.ID !=Guid.Empty)
                 {
                     var roleMenufilter = new List<filterRule>
                     {
                         //new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" },
                         new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
-                        new filterRule{ field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID }
+                        new filterRule{ field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID.ToString() }
                     };
                     var roleMenus = await _roleMenuService.QueryByFilterRules(roleMenufilter).ToListAsync();
                     if (roleMenus.Any())

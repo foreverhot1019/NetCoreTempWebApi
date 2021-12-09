@@ -10,20 +10,23 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class UserRoleDto : _BaseEntityDto
     {
-        [Display(Name = "类型", Description = "类型")]
-        public string _Type { get; } = "UserRole";
-
         [Display(Name = "账户Id", Description = "账户Id")]
         [Required, StringLength(20)]
-        public string _UserId { get; set; } = "-";
+        public Guid _UserId { get; set; } = Guid.Empty;
 
         [Display(Name = "权限Id", Description = "权限Id")]
         [Required, StringLength(20)]
-        public string _RoleId { get; set; } = "-";
+        public Guid _RoleId { get; set; } = Guid.Empty;
 
         [Display(Name = "描述", Description = "描述")]
         [StringLength(100)]
         public string _Remark { get; set; }
+
+        [Display(Name = "账户", Description = "账户")]
+        public User _OUser { get; set; }
+
+        [Display(Name = "权限", Description = "权限")]
+        public Role _ORole { get; set; }
     }
 
     /// <summary>
@@ -33,6 +36,12 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
     {
         public UserRoleProfile()
         {
+            this.Src2DesMapperExp
+                .ForMember(dto => dto._OUser, opts => opts.MapFrom(src => src.OUser))
+                .ForMember(dto => dto._ORole, opts => opts.MapFrom(src => src.ORole));
+            this.Des2SrcMapperExp
+                .ForMember(src => src.OUser, opts => opts.MapFrom(dto => dto._OUser))
+                .ForMember(src => src.ORole, opts => opts.MapFrom(dto => dto._ORole));
         }
     }
 

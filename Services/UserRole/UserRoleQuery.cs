@@ -1,4 +1,5 @@
 ﻿using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.Extensions;
 using NetCoreTemp.WebApi.Models.View_Model;
 using NetCoreTemp.WebApi.Services.Base;
 using System;
@@ -19,14 +20,24 @@ namespace NetCoreTemp.WebApi.Services
         {
             if (filterRules != null && filterRules.Any())
             {
+                //BaseFieldSearch
+                SearchQuery<UserRole> ref_searchQuery = this;
+                filterRules.AddBaseSearchQuery<UserRole>(ref ref_searchQuery);
+
                 foreach (var rule in filterRules)
                 {
                     if (string.IsNullOrWhiteSpace(rule.value))
                         continue;
-                    if (rule.field == "ID")
+                    else
+                    {
+                        //去除AutoMapper-Dto前缀 "_"
+                        rule.field = rule.field.CleanAutoMapperDtoPrefix();
+                    }
+                    if (rule.field == "RoleId")
                     {
                         //if (int.TryParse(rule.value, out int val))
-                            And(x => x.ID == rule.value);
+                        if (Guid.TryParse(rule.value, out Guid guid))
+                            And(x => x.RoleId == guid);
                     }
                     if (rule.field == "Remark")
                     {

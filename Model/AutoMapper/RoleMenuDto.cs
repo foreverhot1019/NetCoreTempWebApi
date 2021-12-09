@@ -10,20 +10,23 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class RoleMenuDto : _BaseEntityDto
     {
-        [Display(Name = "类型", Description = "类型")]
-        public string _Type { get; } = "RoleMenu";
-
         [Display(Name = "权限Id", Description = "权限Id")]
-        [Required, StringLength(20)]
-        public string _RoleId { get; set; } = "-";
+        [Required]
+        public Guid _RoleId { get; set; } = Guid.Empty;
 
         [Display(Name = "菜单Id", Description = "菜单Id")]
-        [Required, StringLength(20)]
-        public string _MenuId { get; set; } = "-";
+        [Required]
+        public Guid _MenuId { get; set; } = Guid.Empty;
 
         [Display(Name = "描述", Description = "描述")]
         [StringLength(100)]
         public string _Remark { get; set; }
+
+        [Display(Name = "权限")]
+        public Role _ORole { get; set; }
+
+        [Display(Name = "菜单")]
+        public Menu _OMenu { get; set; }
     }
 
     /// <summary>
@@ -33,6 +36,12 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
     {
         public RoleMenuProfile()
         {
+            Src2DesMapperExp
+                .ForMember(dto => dto._ORole, opts => opts.MapFrom(src => src.ORole))
+                .ForMember(dto => dto._OMenu, opts => opts.MapFrom(src => src.OMenu));
+            Des2SrcMapperExp
+                .ForMember(src => src.ORole, opts => opts.MapFrom(dto => dto._ORole))
+                .ForMember(src => src.OMenu, opts => opts.MapFrom(dto => dto._OMenu));
         }
     }
 

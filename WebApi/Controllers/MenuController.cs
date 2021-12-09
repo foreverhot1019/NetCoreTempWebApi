@@ -42,7 +42,7 @@ namespace NetCoreTemp.WebApi.Controllers
         /// <returns></returns>
         // GET: api/<MenuController>
         [HttpGet]
-        public async Task<PpagenationResult> Get(string searhFilters = null, int page =0, int limit = 10)
+        public async Task<PpagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
         {
             List<filterRule> filterRules = new List<filterRule>();
             if (!string.IsNullOrEmpty(searhFilters))
@@ -64,7 +64,7 @@ namespace NetCoreTemp.WebApi.Controllers
             }
             IEnumerable<Menu> ArrMenu;
             long rowsCount;
-            (ArrMenu, rowsCount) = _menuService.QueryByFilterRules(filterRules).SelectPage(page,limit);
+            (ArrMenu, rowsCount) = _menuService.QueryByFilterRules(filterRules).SelectPage(page, limit);
             return new PpagenationResult
             {
                 ArrData = ArrMenu.Select(x => x.ToDto()),
@@ -93,9 +93,10 @@ namespace NetCoreTemp.WebApi.Controllers
         public async Task<IActionResult> Post([FromBody] MenuDto menuDto)
         {
             var menu = menuDto.ToEntity();
-            if (string.IsNullOrEmpty(menu.ID))
+
+            if (menu.ID == Guid.Empty)
             {
-                menu.ID = DateTime.Now.to_Long().ToString();
+                menu.ID = Guid.NewGuid();
             }
             await _menuService.Insert(menu);
             return Ok();
@@ -106,10 +107,15 @@ namespace NetCoreTemp.WebApi.Controllers
         public async Task<IActionResult> Put(string id, [FromBody] MenuDto menuDto)
         {
             var menu = menuDto.ToEntity();
-            if (menu.ID != id)
-                menu.ID = id;
-            _menuService.Update(menu);
-            return Ok();
+            if (Guid.TryParse(id, out Guid gid))
+            {
+                if (menu.ID != gid)
+                    menu.ID = gid;
+                _menuService.Update(menu);
+                return Ok();
+            }
+            else
+                return StatusCode(404, "数据不存在");
         }
 
         // DELETE api/<MenuController>/5
@@ -123,7 +129,7 @@ namespace NetCoreTemp.WebApi.Controllers
             if (menus.Any())
             {
                 var menu = menus.FirstOrDefault();
-                if (!string.IsNullOrEmpty(menu.ID))
+                if (menu.ID == Guid.Empty)
                 {
                     _menuService.Delete(menu);
                     return Ok();

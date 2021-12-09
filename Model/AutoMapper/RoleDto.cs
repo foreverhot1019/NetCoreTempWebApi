@@ -11,9 +11,6 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
 {
     public class RoleDto : _BaseEntityDto
     {
-        [Display(Name = "类型", Description = "类型")]
-        public string _Type { get; } = "Role";
-
         [Display(Name = "权限名称", Description = "权限名称")]
         [Required, MaxLength(50)]
         public string _Name { get; set; }
@@ -29,6 +26,9 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
         [Display(Name = "菜单集合", Description = "菜单集合")]
         public IEnumerable<MenuDto> _ArrMenu { get; set; }
 
+        [Display(Name = "账户", Description = "账户")]
+        public ICollection<User> _ArrUser { get; set; }
+
     }
 
     /// <summary>
@@ -38,8 +38,12 @@ namespace NetCoreTemp.WebApi.Models.AutoMapper
     {
         public RoleProfile()
         {
-            Src2DesMapperExp.ForMember(des => des._ArrMenu, opts => opts.MapFrom(src => src.ArrMenu));
-            Des2SrcMapperExp.ForMember(des => des.ArrMenu, opts => opts.MapFrom(src => src._ArrMenu));
+            Src2DesMapperExp
+                .ForMember(dto => dto._ArrMenu, opts => opts.MapFrom(src => src.ArrMenu))
+                .ForMember(dto => dto._ArrUser, opts => opts.MapFrom(src => src.ArrUser));
+            Des2SrcMapperExp
+                .ForMember(src => src.ArrMenu, opts => opts.MapFrom(dto => dto._ArrMenu))
+                .ForMember(src => src.ArrUser, opts => opts.MapFrom(dto => dto._ArrUser));
         }
     }
 

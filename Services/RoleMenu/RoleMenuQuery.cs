@@ -1,4 +1,5 @@
 ﻿using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.Extensions;
 using NetCoreTemp.WebApi.Models.View_Model;
 using NetCoreTemp.WebApi.Services.Base;
 using System;
@@ -17,25 +18,36 @@ namespace NetCoreTemp.WebApi.Services
         /// <returns></returns>
         public RoleMenuQuery WithFilterRule(IEnumerable<filterRule> filterRules)
         {
-            if (filterRules != null && filterRules.Any())
+            if (filterRules?.Any() == true)
             {
+                //BaseFieldSearch
+                SearchQuery<RoleMenu> ref_searchQuery = this;
+                filterRules.AddBaseSearchQuery<RoleMenu>(ref ref_searchQuery);
+
                 foreach (var rule in filterRules)
                 {
                     if (string.IsNullOrWhiteSpace(rule.value))
                         continue;
-                    if (rule.field == "ID")
+                    else
+                    {
+                        //去除AutoMapper-Dto前缀 "_"
+                        rule.field = rule.field.CleanAutoMapperDtoPrefix();
+                    }
+                    if (rule.field == "RoleId")
                     {
                         //if (int.TryParse(rule.value, out int val))
-                            And(x => x.ID == rule.value);
+                        if (Guid.TryParse(rule.value, out Guid guid))// && guid != Guid.Empty
+                            And(x => x.RoleId == guid);
+                    }
+                    if (rule.field == "MenuId")
+                    {
+                        //if (int.TryParse(rule.value, out int val))
+                        if (Guid.TryParse(rule.value, out Guid guid))// && guid != Guid.Empty
+                            And(x => x.MenuId == guid);
                     }
                     if (rule.field == "Remark")
                     {
                         And(x => x.Remark.Contains(rule.value));
-                    }
-                    if (rule.field == "Status")
-                    {
-                        if(int.TryParse(rule.value, out int intVal))
-                        And(x => x.Status ==  (Models.EnumType.EnumRepo.UseStatusEnum)intVal);
                     }
                 }
             }

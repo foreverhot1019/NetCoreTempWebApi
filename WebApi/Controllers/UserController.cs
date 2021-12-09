@@ -119,9 +119,9 @@ namespace NetCoreTemp.WebApi.Controllers
                 {
                     var userRole = new UserRole
                     {
-                        ID = DateTime.Now.to_Long().ToString(),
+                        ID = Guid.NewGuid(),//DateTime.Now.to_Long().ToString(),
                         CreateDate = DateTime.Now.to_Long().Value,
-                        CreateUserId = User.Identity.Name,
+                        CreateUserId = Guid.Empty,//User.Identity.Name,
                         CreateUserName = User.Identity.Name,
                         RoleId = role.ID,
                         UserId = user.ID
@@ -156,7 +156,7 @@ namespace NetCoreTemp.WebApi.Controllers
             var user = await _userService.Find(id, userDto._CreateDate.to_Long());
             var data_userDto = user.ToDto();
             data_userDto._ModifyDate = DateTime.Now;
-            data_userDto._ModifyUserId = "Michael_ID";
+            data_userDto._ModifyUserId = Guid.Empty;// "Michael_ID";
             data_userDto._ModifyUserName = "Michael";
             data_userDto._Name = userDto._Name;
             data_userDto._Email = userDto._Email;
@@ -171,15 +171,15 @@ namespace NetCoreTemp.WebApi.Controllers
                         new filterRule { field="Name", op= (int)Models.EnumType.EnumRepo.FilterOp.In, value= user.Roles}
                     }).ToListAsync();
 
-                    await DeleteUserRole(user.ID);
+                    await DeleteUserRole(user.ID.ToString());
 
                     foreach (var role in roles)
                     {
                         var userRole = new UserRole
                         {
-                            ID = DateTime.Now.to_Long().ToString(),
+                            ID = Guid.NewGuid(),//DateTime.Now.to_Long().ToString(),
                             CreateDate = DateTime.Now.to_Long().Value,
-                            CreateUserId = User.Identity.Name,
+                            CreateUserId = Guid.Empty,//User.Identity.Name,
                             CreateUserName = User.Identity.Name,
                             RoleId = role.ID,
                             UserId = user.ID
@@ -276,7 +276,7 @@ namespace NetCoreTemp.WebApi.Controllers
             var rangeKeyStr = User.Claims.Where(x => x.Type == "RangKey")?.First()?.Value;
             long.TryParse(rangeKeyStr, out long rangeKey);
             var OUser = await _userService.Find(Id, rangeKey);
-            if (OUser == null || string.IsNullOrWhiteSpace(OUser.ID))
+            if (OUser == null || OUser.ID==Guid.Empty)
             {
                 return StatusCode(403, "账户不存在");
             }
