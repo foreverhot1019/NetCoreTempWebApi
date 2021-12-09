@@ -62,7 +62,7 @@ namespace NetCoreTemp.WebApi
                 opts.Filters.Add<ApiBaseAuthorizeFilter>();//全局权限认证
                 opts.Filters.Add<ApiBaseActionFilter>();//全局Action统一格式返回
             });
-            //    .AddJsonOptions(opts =>
+            //.AddJsonOptions(opts =>
             //{
             //    //驼峰
             //    opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -240,32 +240,10 @@ namespace NetCoreTemp.WebApi
 
             #endregion
 
-            services.AddScoped<WXFLHttpClientHelper>();
-            services.AddScoped<WXKFAssignHandler>();
-
             #region QuartzJobScheduler
 
             //1.自动IJobFactory使用MicrosoftDependencyInjectionJobFactory包实现
-            //services.AddQuartzHostedService(x =>
-            //{
-            //    x.WaitForJobsToComplete = true;
-            //});
-            //services.AddQuartz(q =>
-            //{
-            //    q.SchedulerName = "MyQuartzScheduler";
-            //    //使用jobs配置文件
-            //    q.UseXmlSchedulingConfiguration(x => { 
-            //        x.Files = new [] { "~/Quartz/quartz_jobs.xml" };
-            //        x.ScanInterval = TimeSpan.FromMinutes(1);
-            //        x.FailOnFileNotFound = true;
-            //        x.FailOnSchedulingError = true;
-            //    });
-            //    q.UseMicrosoftDependencyInjectionJobFactory();
-            //});
-            //services.AddQuartzServer(option =>
-            //{
-            //    option.WaitForJobsToComplete = true;
-            //});
+            //services.AddQuartzSchedulerServiceAuto();
 
             //2.手动实现IJobFactory（必须将IJob先注入DI）
             //services.AddQuartzSchedulerService();

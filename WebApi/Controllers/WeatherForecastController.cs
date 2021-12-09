@@ -46,7 +46,7 @@ namespace NetCoreTemp.WebApi.Controllers
             if (myMapper != null)
                 _myMapper = myMapper;
 
-            ////测试 订阅key事件
+            ////测试 订阅key过期事件
             //_redisHelper.SubscribeKeyExpire();
         }
 
@@ -109,13 +109,8 @@ namespace NetCoreTemp.WebApi.Controllers
             #endregion
 
             return Ok(Arr);
-            return Ok(new ActionReturnMessage
-            {
-                IsSuccess = true,
-                Data = Arr,
-                StatusCode = System.Net.HttpStatusCode.OK
-            });
         }
+
         public class Foo
         {
             public int Bar { get; set; }
