@@ -48,6 +48,9 @@ namespace NetCoreTemp.WebApi
         {
             Configuration = configuration;
             WebEnv = env;
+            string appRoot = env.ContentRootPath;
+            Environment.SetEnvironmentVariable("DataDirectory", Path.Combine(appRoot, "App_Data"));
+            var ss = Environment.ExpandEnvironmentVariables(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         public IConfiguration Configuration { get; }
@@ -89,9 +92,10 @@ namespace NetCoreTemp.WebApi
             //注入IOption<JwtOption>
             services.Configure<JwtOption>(Configuration.GetSection("JWT"));
             //注册EF上下文
-            services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sqldbBuilder =>
+            services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(Environment.ExpandEnvironmentVariables(Configuration.GetConnectionString("DefaultConnection")), sqldbBuilder =>
             {
                 sqldbBuilder.CommandTimeout(500);
+                sqldbBuilder.MigrationsAssembly("NetCoreTemp.WebApi");
             }));
             //增加AutoMapper
             services.AddAutoMapperService();
@@ -259,7 +263,6 @@ namespace NetCoreTemp.WebApi
                 app.UseDeveloperExceptionPage();
             }
             loggerFactory.AddLog4Net();
-
             //app.UseHttpsRedirection();
 
             //跨域

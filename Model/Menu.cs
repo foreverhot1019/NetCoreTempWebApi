@@ -96,8 +96,7 @@ namespace NetCoreTemp.WebApi.Models
         public string Component { get; set; } = "-";
 
         [Display(Name = "上级菜单", Description = "上级菜单")]
-        [Required, StringLength(50)]
-        public Guid ParentMenuId { get; set; } = Guid.Empty;
+        public Guid? ParentMenuId { get; set; } = Guid.Empty;
 
         //[Display(Name = "权限集合", Description = "权限集合")]
         //[StringLength(500)]
@@ -111,6 +110,6 @@ namespace NetCoreTemp.WebApi.Models
         public Menu ParentMenu { get; set; }
 
         [Display(Name = "子菜单", Description = "子菜单")]
-        public virtual ICollection<Menu> ChildrenMenu { get; set; }
+        public ICollection<Menu> ChildrenMenu { get; set; }
     }
 }

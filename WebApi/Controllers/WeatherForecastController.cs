@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetCoreTemp.WebApi.Models;
 using NetCoreTemp.WebApi.Models.AutoMapper;
 using AutoMapper;
+using NetCoreTemp.WebApi.Models.DatabaseContext;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -30,6 +31,7 @@ namespace NetCoreTemp.WebApi.Controllers
 
         private readonly MyMapper<User, UserDto> _myMapper;
         private readonly IMapper _mapper;
+        private readonly AppDbContext _dbContext;
 
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
@@ -45,6 +47,8 @@ namespace NetCoreTemp.WebApi.Controllers
             var myMapper = serviceProvider.GetService<MyMapper<User, UserDto>>();
             if (myMapper != null)
                 _myMapper = myMapper;
+
+            _dbContext = serviceProvider.GetRequiredService<AppDbContext>();
 
             ////测试 订阅key过期事件
             //_redisHelper.SubscribeKeyExpire();
@@ -121,16 +125,17 @@ namespace NetCoreTemp.WebApi.Controllers
             //roleQuery.WithFilterRule(filters);
             //var q = roleQuery.Query();
 
-            var user = new User
-            {
-                Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
-                Roles = "1,2,3",
-                CreateUserId = Guid.Empty,
-                ModifyUserId = Guid.Empty
-            };
-            ModelState.Clear();
-            TryValidateModel(user);
-            var s = ModelState.IsValid;
+            //var user = new User
+            //{
+            //    Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+            //    Roles = "1,2,3",
+            //    CreateUserId = Guid.Empty,
+            //    ModifyUserId = Guid.Empty
+            //};
+            //ModelState.Clear();
+            //TryValidateModel(user);
+            //var s = ModelState.IsValid;
+            var ArrUser = _dbContext.User.ToList();
 
             #endregion
 
