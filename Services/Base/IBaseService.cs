@@ -8,7 +8,8 @@ using NetCoreTemp.WebApi.Models.View_Model;
 
 namespace NetCoreTemp.WebApi.Services.Base
 {
-    public interface IBaseService<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
+    public interface IBaseService<TEntity>
+        where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         /// <summary>
         /// 返回DynamoDBRepository 仓库

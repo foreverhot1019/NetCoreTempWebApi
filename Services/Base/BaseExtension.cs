@@ -59,7 +59,7 @@ namespace NetCoreTemp.WebApi.Services.Base
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="filterRules"></param>
         /// <param name="searchQuery"></param>
-        public static void AddBaseSearchQuery<TEntity>(this IEnumerable<filterRule> filterRules, ref SearchQuery<TEntity> searchQuery)
+        public static void AddBaseSearchQuery<TEntity>(this IEnumerable<filterRule> filterRules, ISearchQuery<TEntity> searchQuery)
             where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity<Guid>
         {
             #region BaseFieldSearch

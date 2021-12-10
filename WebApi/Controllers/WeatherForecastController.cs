@@ -13,6 +13,7 @@ using NetCoreTemp.WebApi.Models;
 using NetCoreTemp.WebApi.Models.AutoMapper;
 using AutoMapper;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
+using NetCoreTemp.WebApi.Services;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -32,6 +33,7 @@ namespace NetCoreTemp.WebApi.Controllers
         private readonly MyMapper<User, UserDto> _myMapper;
         private readonly IMapper _mapper;
         private readonly AppDbContext _dbContext;
+        private readonly RoleService _roleService;
 
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
@@ -49,6 +51,7 @@ namespace NetCoreTemp.WebApi.Controllers
                 _myMapper = myMapper;
 
             _dbContext = serviceProvider.GetRequiredService<AppDbContext>();
+            _roleService = serviceProvider.GetRequiredService<RoleService>();
 
             ////测试 订阅key过期事件
             //_redisHelper.SubscribeKeyExpire();
@@ -115,15 +118,15 @@ namespace NetCoreTemp.WebApi.Controllers
             #region SearchQuery测试
 
             //var filters = new List<filterRule> {
+            //    new filterRule{  field="Name", value = "aaa"},
             //    new filterRule{  field="CreateUserId", value = "aaa"},
             //    new filterRule{  field="CreateUserName", value = "bbb"},
             //    new filterRule{  field="CreateDate", value = "bbb"},
             //    new filterRule{  field="_CreateDate", value = "2021-12-09"},
             //    new filterRule{  field="CreateDate_", value = "2021-12-09"},
             //};
-            //var roleQuery = new Services.RoleQuery();
-            //roleQuery.WithFilterRule(filters);
-            //var q = roleQuery.Query();
+            ////var roleQuery = new Services.RoleQuery();
+            //var qf = _roleService.QueryByFilterRules(filters);
 
             //var user = new User
             //{
@@ -135,7 +138,7 @@ namespace NetCoreTemp.WebApi.Controllers
             //ModelState.Clear();
             //TryValidateModel(user);
             //var s = ModelState.IsValid;
-            var ArrUser = _dbContext.User.ToList();
+            //var ArrUser = _dbContext.User.ToList();
 
             #endregion
 

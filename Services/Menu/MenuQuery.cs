@@ -21,8 +21,7 @@ namespace NetCoreTemp.WebApi.Services
             if (filterRules?.Any() == true)
             {
                 //BaseFieldSearch
-                SearchQuery<Menu> ref_searchQuery = this;
-                filterRules.AddBaseSearchQuery<Menu>(ref ref_searchQuery);
+                filterRules.AddBaseSearchQuery<Menu>(this);
 
                 foreach (var rule in filterRules)
                 {
