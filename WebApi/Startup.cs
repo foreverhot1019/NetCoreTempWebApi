@@ -50,7 +50,6 @@ namespace NetCoreTemp.WebApi
             WebEnv = env;
             string appRoot = env.ContentRootPath;
             Environment.SetEnvironmentVariable("DataDirectory", Path.Combine(appRoot, "App_Data"));
-            var ss = Environment.ExpandEnvironmentVariables(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         public IConfiguration Configuration { get; }
