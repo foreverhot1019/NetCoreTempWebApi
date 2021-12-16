@@ -39,6 +39,13 @@ using NetCoreTemp.WebApi.QuartzJobScheduler;
 using NetCoreTemp.WebApi.QuartzJobScheduler.Job;
 using NetCoreTemp.WebApi.WXKF;
 using NetCoreTemp.WebApi.QuartzScheduler;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 
 namespace NetCoreTemp.WebApi
 {
@@ -58,11 +65,57 @@ namespace NetCoreTemp.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region 国际化
+
+            services.AddLocalization();
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("zh-cn"),
+                    new CultureInfo("en-US"),
+                    new CultureInfo("zh-tw"),
+                    new CultureInfo("ja-jp")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
+                {
+                    var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(lang))
+                    {
+                        var culture = new CultureInfo(lang);
+                        if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
+                        {
+                            //默认读取 accept-language
+                            var result = new ProviderCultureResult(culture.Name);
+                            // My custom request culture logic
+                            return new ProviderCultureResult(lang);
+                        }
+                    }
+                    return null;
+                }));
+            });
+
+            #endregion
+
             services.AddControllers(opts =>
             {
                 opts.Filters.Add<ApiBaseExceptionFilter>();//全局异常处理
                 opts.Filters.Add<ApiBaseAuthorizeFilter>();//全局权限认证
                 opts.Filters.Add<ApiBaseActionFilter>();//全局Action统一格式返回
+                //opts.ModelValidatorProviders.Add(new MyModelValidatorProvider());
+            }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
+            .AddDataAnnotationsLocalization(setup =>
+            {
+                //shareResource
+                setup.DataAnnotationLocalizerProvider = (type, strfac) =>
+                {
+                    return strfac.Create(typeof(CommonLanguage.Language));
+                };
             });
             //.AddJsonOptions(opts =>
             //{
@@ -70,6 +123,7 @@ namespace NetCoreTemp.WebApi
             //    opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             //    opts.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
             //});
+
             //ModelState 验证错误 统一格式返回
             services.Configure<ApiBehaviorOptions>(ApiBhvOpts =>
             {
@@ -88,6 +142,7 @@ namespace NetCoreTemp.WebApi
                     return new JsonResult(new ActionReturnMessage { StatusCode = System.Net.HttpStatusCode.Forbidden, IsSuccess = false, ErrMessage = "参数格式错误:" + string.Join(";", ArrError) });
                 };
             });
+
             //注入IOption<JwtOption>
             services.Configure<JwtOption>(Configuration.GetSection("JWT"));
             //注册EF上下文
@@ -252,11 +307,36 @@ namespace NetCoreTemp.WebApi
             //services.AddQuartzSchedulerService();
 
             #endregion
+
+            //视图显示提供者
+            services.AddSingleton<Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider, My_ModelMetadataProvider>();
+
+            #region 自定义验证器
+
+            IServiceProvider serviceProvider = null;
+            services.AddSingleton<IModelValidatorProvider, MyModelValidatorProvider>(sp =>
+            {
+                serviceProvider = sp;
+                var memoryCache = sp.GetService<IMemoryCache>();
+                var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer>();
+                var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
+                return new MyModelValidatorProvider(memoryCache, stringLocalizer, sharedLocalizer);
+            });
+
+            services.Configure<MvcOptions>(opts =>
+            {
+                var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
+                opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
+            });
+
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
+            var a = serviceProvider.GetRequiredService<IModelValidatorProvider>();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -267,6 +347,46 @@ namespace NetCoreTemp.WebApi
             //跨域
             app.UseCors("localhost");
             app.UseRouting();
+
+            #region 国际化
+
+            var options = serviceProvider.GetService<IOptions<RequestLocalizationOptions>>();
+            if (options?.Value != null)
+                app.UseRequestLocalization(options.Value);
+            else
+                app.UseRequestLocalization(opts =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("zh-cn"),
+                        new CultureInfo("en-US"),
+                        new CultureInfo("zh-tw"),
+                        new CultureInfo("ja-jp")
+                    };
+
+                    opts.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                    opts.SupportedCultures = supportedCultures;
+                    opts.SupportedUICultures = supportedCultures;
+                    opts.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
+                    {
+                        var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(lang))
+                        {
+                            var culture = new CultureInfo(lang);
+                            if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
+                            {
+                                //默认读取 accept-language
+                                var result = new ProviderCultureResult(culture.Name);
+                                // My custom request culture logic
+                                return new ProviderCultureResult(lang);
+                            }
+                        }
+                        return null;
+                    }));
+                });
+
+            #endregion
 
             #region 设置静态文件
 

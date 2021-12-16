@@ -14,6 +14,7 @@ using NetCoreTemp.WebApi.Models.AutoMapper;
 using AutoMapper;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
 using NetCoreTemp.WebApi.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -127,18 +128,21 @@ namespace NetCoreTemp.WebApi.Controllers
             //};
             ////var roleQuery = new Services.RoleQuery();
             //var qf = _roleService.QueryByFilterRules(filters);
+            var user = new User
+            {
+                Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+                Roles = "1,2,3",
+                Email="aqqqqq.com",
+                CreateUserId = Guid.Empty,
+                ModifyUserId = Guid.Empty
+            };
+            //var tf = await TryUpdateModelAsync<User>(user);
 
-            //var user = new User
-            //{
-            //    Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
-            //    Roles = "1,2,3",
-            //    CreateUserId = Guid.Empty,
-            //    ModifyUserId = Guid.Empty
-            //};
-            //ModelState.Clear();
-            //TryValidateModel(user);
-            //var s = ModelState.IsValid;
-            //var ArrUser = _dbContext.User.ToList();
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            ModelState.Clear();
+            TryValidateModel(user);
+            var s = ModelState.IsValid;
+            var ArrUser = _dbContext.User.ToList();
 
             #endregion
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 using NetCoreTemp.WebApi.Models.BaseModel;
 using NetCoreTemp.WebApi.Models.Extensions;
 
@@ -75,7 +76,7 @@ namespace NetCoreTemp.WebApi.Models
 
     /// <summary>
     /// MetadataType在WebApi下不起作用
-    /// 在Asp.Net Core MVC 下ModelMetadataType起作用
+    /// 在Asp.Net Core MVC 下 ModelMetadataType 起作用，MetadataType 不起作用
     /// </summary>
     [MetadataType(typeof(UserMetadata))]
     public partial class User
@@ -84,16 +85,16 @@ namespace NetCoreTemp.WebApi.Models
 
     public class UserMetadata
     {
-        [Display(Name = "账户名称", Description = "账户名称")]
-        [Required(ErrorMessage = "字段不能为空"), MaxLength(50, ErrorMessage = "字段长度不能超过50")]
+        [Display(Name = "账户名称Meta", Description = "账户名称")]
+        [Required(ErrorMessage = "字段不能为空"), MaxLength(10, ErrorMessage = "字段 {0} 长度不能超过50")]
         public string Name { get; set; }
 
-        [Display(Name = "邮件", Description = "邮件")]
-        [Required(ErrorMessage = "字段不能为空"), MaxLength(100, ErrorMessage = "字段长度不能超过100")]
+        [Display(Name = "邮件Meta", Description = "邮件")]
+        [Required(ErrorMessage = "字段不能为空"), EmailAddress(ErrorMessage ="{0} 邮箱格式不正确"), MaxLength(100, ErrorMessage = "字段 {0} 长度不能超过100")]
         public string Email { get; set; }
 
-        [Display(Name = "账户权限", Description = "账户权限")]
-        [MaxLength(500, ErrorMessage = "字段长度不能超过500")]
+        [Display(Name = "账户权限Meta", Description = "账户权限")]
+        [MaxLength(500, ErrorMessage = "字段 {0} 长度不能超过500")]
         public string Roles { get; set; }
     }
 }
