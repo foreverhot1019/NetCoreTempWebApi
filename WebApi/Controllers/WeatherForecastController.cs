@@ -138,13 +138,26 @@ namespace NetCoreTemp.WebApi.Controllers
             };
             //var tf = await TryUpdateModelAsync<User>(user);
 
+            var ArrCookie = HttpContext.Request.Cookies;
+
             var culture = System.Globalization.CultureInfo.CurrentCulture;
+            var uiculture = System.Globalization.CultureInfo.CurrentUICulture;
             ModelState.Clear();
             TryValidateModel(user);
             var s = ModelState.IsValid;
             var ArrUser = _dbContext.User.ToList();
 
             #endregion
+
+            //var c_val = Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.MakeCookieValue(new Microsoft.AspNetCore.Localization.RequestCulture(culture));
+            //Response.Cookies.Append(
+            //    "FinchCulture",
+            //    c_val,
+            //    new Microsoft.AspNetCore.Http.CookieOptions
+            //    {
+            //        Expires = DateTimeOffset.UtcNow.AddYears(1),
+            //        SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
+            //    });
 
             return Ok(Arr);
         }

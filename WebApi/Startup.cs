@@ -62,44 +62,65 @@ namespace NetCoreTemp.WebApi
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebEnv { get; }
 
+        /// <summary>
+        /// 国际化配置
+        /// </summary>
+        Action<RequestLocalizationOptions> actLocalizationOpts = new Action<RequestLocalizationOptions>(options =>
+        {
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("zh-cn"),
+                new CultureInfo("en-US"),
+                new CultureInfo("zh-tw"),
+                new CultureInfo("ja-jp")
+            };
+
+            options.DefaultRequestCulture = new RequestCulture(culture: supportedCultures[0], uiCulture: supportedCultures[0]);
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
+            {
+                var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(lang))
+                {
+                    var culture = new CultureInfo(lang);
+                    if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
+                    {
+                        //默认读取 accept-language
+                        var result = new ProviderCultureResult(culture.Name);
+                        // My custom request culture logic
+                        return new ProviderCultureResult(lang);
+                    }
+                }
+                return null;
+            }));
+            #region 设置 国际化 Cookie 名称 CookieName=c=ja-jp|uic= 格式 必须是 c={culture}|uic={culture}
+
+            // Find the cookie provider with LINQ
+            var cookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().First();
+            // Set the new cookie name
+            cookieProvider.CookieName = "FinchCulture";
+
+            #endregion
+        });
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             #region 国际化
 
             services.AddLocalization();
-            services.Configure<RequestLocalizationOptions>(options =>
+            services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
+            services.Configure<CookiePolicyOptions>(options =>
             {
-                var supportedCultures = new List<CultureInfo>
-                {
-                    new CultureInfo("zh-cn"),
-                    new CultureInfo("en-US"),
-                    new CultureInfo("zh-tw"),
-                    new CultureInfo("ja-jp")
-                };
-
-                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-                options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
-                {
-                    var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
-
-                    if (!string.IsNullOrEmpty(lang))
-                    {
-                        var culture = new CultureInfo(lang);
-                        if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
-                        {
-                            //默认读取 accept-language
-                            var result = new ProviderCultureResult(culture.Name);
-                            // My custom request culture logic
-                            return new ProviderCultureResult(lang);
-                        }
-                    }
-                    return null;
-                }));
+                // This lambda determines whether user consent for non-essential 
+                // cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                // requires using Microsoft.AspNetCore.Http;
+                //options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
             });
-
             #endregion
 
             services.AddControllers(opts =>
@@ -347,44 +368,17 @@ namespace NetCoreTemp.WebApi
             //跨域
             app.UseCors("localhost");
             app.UseRouting();
+            app.UseCookiePolicy();
 
-            #region 国际化
+            #region 国际化 必须在 app.UseMvc();前
+
+            app.UseRequestLocalization();
 
             var options = serviceProvider.GetService<IOptions<RequestLocalizationOptions>>();
             if (options?.Value != null)
                 app.UseRequestLocalization(options.Value);
             else
-                app.UseRequestLocalization(opts =>
-                {
-                    var supportedCultures = new List<CultureInfo>
-                    {
-                        new CultureInfo("zh-cn"),
-                        new CultureInfo("en-US"),
-                        new CultureInfo("zh-tw"),
-                        new CultureInfo("ja-jp")
-                    };
-
-                    opts.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                    opts.SupportedCultures = supportedCultures;
-                    opts.SupportedUICultures = supportedCultures;
-                    opts.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
-                    {
-                        var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
-
-                        if (!string.IsNullOrEmpty(lang))
-                        {
-                            var culture = new CultureInfo(lang);
-                            if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
-                            {
-                                //默认读取 accept-language
-                                var result = new ProviderCultureResult(culture.Name);
-                                // My custom request culture logic
-                                return new ProviderCultureResult(lang);
-                            }
-                        }
-                        return null;
-                    }));
-                });
+                app.UseRequestLocalization(actLocalizationOpts);
 
             #endregion
 
