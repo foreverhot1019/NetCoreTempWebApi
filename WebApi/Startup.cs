@@ -112,15 +112,7 @@ namespace NetCoreTemp.WebApi
 
             services.AddLocalization();
             services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential 
-                // cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                // requires using Microsoft.AspNetCore.Http;
-                //options.MinimumSameSitePolicy = SameSiteMode.None;
-                options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
-            });
+
             #endregion
 
             services.AddControllers(opts =>
@@ -330,7 +322,7 @@ namespace NetCoreTemp.WebApi
             #endregion
 
             //视图显示提供者
-            services.AddSingleton<Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider, My_ModelMetadataProvider>();
+            //services.AddSingleton<Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider, My_ModelMetadataProvider>();
 
             #region 自定义验证器
 
@@ -357,7 +349,9 @@ namespace NetCoreTemp.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
-            var a = serviceProvider.GetRequiredService<IModelValidatorProvider>();
+            //为了 实现ConfigServices里的 serviceProvider的实例
+            serviceProvider.GetRequiredService<IModelValidatorProvider>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -371,8 +365,6 @@ namespace NetCoreTemp.WebApi
             app.UseCookiePolicy();
 
             #region 国际化 必须在 app.UseMvc();前
-
-            app.UseRequestLocalization();
 
             var options = serviceProvider.GetService<IOptions<RequestLocalizationOptions>>();
             if (options?.Value != null)

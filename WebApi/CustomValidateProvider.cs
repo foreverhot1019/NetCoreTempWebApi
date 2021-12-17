@@ -90,11 +90,7 @@ namespace NetCoreTemp.WebApi
         //{
         //    var identity = ModelMetadataIdentity.ForType(modelType);
         //    DefaultMetadataDetails details = CreateTypeDetails(identity);
-
-
         //    var meta = base.GetMetadataForProperty(propertyInfo, modelType);
-
-
         //    return meta;
         //}
 

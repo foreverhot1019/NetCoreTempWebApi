@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Language\CommonLanguage.csproj" />
     <ProjectReference Include="..\Model\NetCoreTemp.WebApi.Models.csproj" />
-    <ProjectReference Include="..\RedisHelp\RedisHelp.csproj" />
-    <ProjectReference Include="..\Services\NetCoreTemp.WebApi.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>

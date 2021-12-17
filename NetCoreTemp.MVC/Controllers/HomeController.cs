@@ -4,34 +4,49 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using NetCoreTemp.MVC.Models;
+using NetCoreTemp.MVC.Models.Home;
 
 namespace NetCoreTemp.MVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IStringLocalizer<HomeController> _localizer;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IStringLocalizer<HomeController> localizer)
         {
             _logger = logger;
+            _localizer = localizer;
         }
 
-        public IActionResult Index(Test _aa )
+        [HttpGet]
+        public IActionResult Index()
         {
-            _aa = _aa?? new Test
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            var uiculture = System.Globalization.CultureInfo.CurrentUICulture;
+
+            var _aa = new Test
             {
                 a = 11,
-                c = "123123123阿斯顿撒旦飞洒地方",
+                c = $"{_localizer["value from homecontroller"]}-123123123阿斯顿撒旦飞洒地方",
             };
-            ModelState.Clear();
-            TryValidateModel(_aa);
+            return View(_aa);
+        }
+
+        [HttpPost]
+        public IActionResult Index(Test _aa)
+        {
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            var uiculture = System.Globalization.CultureInfo.CurrentUICulture;
             if (ModelState.IsValid)
             {
-
+                ModelState.Clear();
+                TryValidateModel(_aa);
             }
-            return View();
+            return View(_aa);
         }
 
         public IActionResult Privacy()
