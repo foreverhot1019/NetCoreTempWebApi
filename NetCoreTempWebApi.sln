@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreTemp.MVC", "NetCoreT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLanguage", "Language\CommonLanguage.csproj", "{6313FF2D-6180-42C8-BC7B-23274EBF722C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLanguage", "MyLanguage\MyLanguage.csproj", "{F56355E9-F9DA-46EE-B6FB-36919C3DCA19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,12 +53,16 @@ Global
 		{6313FF2D-6180-42C8-BC7B-23274EBF722C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6313FF2D-6180-42C8-BC7B-23274EBF722C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6313FF2D-6180-42C8-BC7B-23274EBF722C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56355E9-F9DA-46EE-B6FB-36919C3DCA19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56355E9-F9DA-46EE-B6FB-36919C3DCA19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56355E9-F9DA-46EE-B6FB-36919C3DCA19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56355E9-F9DA-46EE-B6FB-36919C3DCA19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_NeutralResourcesLanguage = zh-HK
 		SolutionGuid = {D34B8931-FA31-452A-8B98-4D9712DACD06}
+		RESX_NeutralResourcesLanguage = zh-HK
 	EndGlobalSection
 EndGlobal

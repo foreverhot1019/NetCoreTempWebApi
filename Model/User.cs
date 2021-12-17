@@ -72,13 +72,17 @@ namespace NetCoreTemp.WebApi.Models
 
         [Display(Name = "账户权限", Description = "账户权限")]
         public virtual ICollection<Role> ArrRole { get; set; }
+
+        [NotMapped]
+        [Display(Name = "账户权限", Description = "账户权限")]
+        public string Test { get; set; }
     }
 
     /// <summary>
     /// MetadataType在WebApi下不起作用
     /// 在Asp.Net Core MVC 下 ModelMetadataType 起作用，MetadataType 不起作用
     /// </summary>
-    [MetadataType(typeof(UserMetadata))]
+    [ModelMetadataType(typeof(UserMetadata))]
     public partial class User
     {
     }
@@ -96,5 +100,11 @@ namespace NetCoreTemp.WebApi.Models
         [Display(Name = "账户权限Meta", Description = "账户权限")]
         [MaxLength(500, ErrorMessage = "字段 {0} 长度不能超过500")]
         public string Roles { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Test-Meta", Description = "Test")]
+        [Required]
+        [MaxLength(3)]
+        public string Test { get; set; }
     }
 }

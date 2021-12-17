@@ -15,6 +15,7 @@ using AutoMapper;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
 using NetCoreTemp.WebApi.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Localization;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -60,7 +61,7 @@ namespace NetCoreTemp.WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromServices]IStringLocalizer<Resources.Models.User> stringLocalizer)
         {
             var rng = new Random();
             var Arr = await Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -128,6 +129,9 @@ namespace NetCoreTemp.WebApi.Controllers
             //};
             ////var roleQuery = new Services.RoleQuery();
             //var qf = _roleService.QueryByFilterRules(filters);
+
+            #endregion
+
             var user = new User
             {
                 Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
@@ -136,9 +140,9 @@ namespace NetCoreTemp.WebApi.Controllers
                 CreateUserId = Guid.Empty,
                 ModifyUserId = Guid.Empty
             };
-            //var tf = await TryUpdateModelAsync<User>(user);
 
-            var ArrCookie = HttpContext.Request.Cookies;
+            //var tf = await TryUpdateModelAsync<User>(user);
+            var ss = stringLocalizer.GetString("Test");
 
             var culture = System.Globalization.CultureInfo.CurrentCulture;
             var uiculture = System.Globalization.CultureInfo.CurrentUICulture;
@@ -146,8 +150,6 @@ namespace NetCoreTemp.WebApi.Controllers
             TryValidateModel(user);
             var s = ModelState.IsValid;
             var ArrUser = _dbContext.User.ToList();
-
-            #endregion
 
             //var c_val = Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.MakeCookieValue(new Microsoft.AspNetCore.Localization.RequestCulture(culture));
             //Response.Cookies.Append(

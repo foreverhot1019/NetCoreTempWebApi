@@ -15,16 +15,20 @@ namespace NetCoreTemp.MVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IStringLocalizer<HomeController> _localizer;
+        private readonly IStringLocalizer<CommonLanguage.Language> _localizer1;
 
-        public HomeController(ILogger<HomeController> logger, IStringLocalizer<HomeController> localizer)
+        public HomeController(ILogger<HomeController> logger, IStringLocalizer<HomeController> localizer, IStringLocalizer<CommonLanguage.Language> localizer1)
         {
             _logger = logger;
             _localizer = localizer;
+            _localizer1 = localizer1;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
+            var t = _localizer1.GetString("Create");
+            ViewData["title"] = t;
             var culture = System.Globalization.CultureInfo.CurrentCulture;
             var uiculture = System.Globalization.CultureInfo.CurrentUICulture;
 
@@ -41,6 +45,7 @@ namespace NetCoreTemp.MVC.Controllers
         {
             var culture = System.Globalization.CultureInfo.CurrentCulture;
             var uiculture = System.Globalization.CultureInfo.CurrentUICulture;
+            var s = _localizer.GetString("a");
             if (ModelState.IsValid)
             {
                 ModelState.Clear();

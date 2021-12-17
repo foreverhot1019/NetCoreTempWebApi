@@ -39,7 +39,7 @@ namespace NetCoreTemp.MVC
                 .AddDataAnnotationsLocalization(); //不要重写 DataAnnotationLocalizerProvider，否则需要自己管理 资源文件
             services.AddMemoryCache();
 
-            //视图显示提供者
+            //视图显示提供者 无需重写 Asp.NetCore Localizar 已实现
             //services.AddSingleton<Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider, My_ModelMetadataProvider>();
 
             #region 自定义验证器
@@ -57,8 +57,8 @@ namespace NetCoreTemp.MVC
             services.Configure<MvcOptions>(opts =>
             {
                 var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
-                //var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
-                //opts.ModelValidatorProviders.Clear();
+                var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
+                opts.ModelValidatorProviders.Clear();
                 opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
             });
 

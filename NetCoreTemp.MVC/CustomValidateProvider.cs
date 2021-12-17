@@ -218,6 +218,7 @@ namespace NetCoreTemp.MVC
         /// <returns></returns>
         public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
         {
+            var a = _stringLocalizer?.GetString("a");
             List<ModelValidationResult> modelValidationResults = new List<ModelValidationResult>();
             var metadata = context.ModelMetadata;
             if (metadata == null)
@@ -379,6 +380,10 @@ namespace NetCoreTemp.MVC
         {
             if (context.ModelMetadata?.HasValidators != true)
                 return;
+
+            var a = _stringLocalizer?.GetString("a");
+            var a_ = _sharedLocalizer?.GetString("a");
+
             //var MyVldAttrAdp = new MyValidationAttributeAdapterProvider();
             var propName = context.ModelMetadata.PropertyName;
             var modelType = context.ModelMetadata.ModelType;
@@ -510,92 +515,6 @@ namespace NetCoreTemp.MVC
 
             switch (validMetadata)
             {
-                #region MyRegion
-
-                //case RequiredAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RequiredAttribute_ValidationError";
-                //    }
-                //    break;
-                //case EnumDataTypeAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "EnumDataTypeAttribute_TypeNeedsToBeAnEnum";
-                //    }
-                //    break;
-
-                //case MinLengthAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        //StringLengthAttribute_ValidationError
-                //        validator.ErrorMessageResourceName = "MinLengthAttribute_ValidationError";
-                //    }
-                //    break;
-                //case MaxLengthAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        //StringLengthAttribute_ValidationError
-                //        validator.ErrorMessageResourceName = "MaxLengthAttribute_ValidationError";
-                //    }
-                //    break;
-                //case RangeAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RangeAttribute_ValidationError";
-                //        //if (metadata.ModelType == typeof(int) || metadata.ModelType == typeof(long))
-                //        //else
-                //        //    validator.ErrorMessageResourceName = "ValidationDefault_FloatRange";
-                //    }
-                //    break;
-                //case StringLengthAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        StringLengthAttribute StrLenAttr = validator as StringLengthAttribute;
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        if (StrLenAttr.MinimumLength > 0)
-                //            validator.ErrorMessageResourceName = "StringLengthAttribute_ValidationErrorIncludingMinimum";
-                //        else
-                //            validator.ErrorMessageResourceName = "StringLengthAttribute_ValidationError";
-                //    }
-                //    break;
-                //case EmailAddressAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "EmailAddressAttribute_Invalid";
-                //    }
-                //    break;
-                //case RegularExpressionAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RegexAttribute_ValidationError";
-                //    }
-                //    break;
-                //case System.ComponentModel.DataAnnotations.CompareAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        //var CompareAttr = validator as CompareAttribute;
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "CompareAttribute_MustMatch";
-                //    }
-                //    break;
-                //case RemoteAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        //var RemoteAttr = validator as System.Web.Mvc.RemoteAttribute;
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RemoteAttribute_NoUrlFound";
-                //    }
-                //    break;
-
-                #endregion
                 case RequiredAttribute attr:
                     if (needResourceSet)
                         attr.ErrorMessageResourceName = "RequiredAttribute_ValidationError";

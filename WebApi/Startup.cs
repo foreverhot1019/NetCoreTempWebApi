@@ -114,22 +114,43 @@ namespace NetCoreTemp.WebApi
             services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
 
             #endregion
-
             services.AddControllers(opts =>
             {
                 opts.Filters.Add<ApiBaseExceptionFilter>();//全局异常处理
                 opts.Filters.Add<ApiBaseAuthorizeFilter>();//全局权限认证
                 opts.Filters.Add<ApiBaseActionFilter>();//全局Action统一格式返回
                 //opts.ModelValidatorProviders.Add(new MyModelValidatorProvider());
-            }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
-            .AddDataAnnotationsLocalization(setup =>
-            {
-                //shareResource
-                setup.DataAnnotationLocalizerProvider = (type, strfac) =>
+            })
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
+                                                                                //.AddDataAnnotationsLocalization();
+                .AddDataAnnotationsLocalization(opts =>
                 {
-                    return strfac.Create(typeof(CommonLanguage.Language));
-                };
-            });
+                    opts.DataAnnotationLocalizerProvider = (type, factory) =>
+                    {
+                        //var asm = Assembly.GetExecutingAssembly();
+                        if (type.BaseType == typeof(Models.BaseModel.BaseEntity))
+                        {
+                            //var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "Models.");
+                            //var restype = Assembly.GetExecutingAssembly().GetType(typename);
+
+                            return factory.Create(typeof(Resources.Models.User));
+                        }
+                        else if (type.BaseType == typeof(Models.BaseModel._BaseEntityDto))
+                        {
+                            var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "Models.");
+                            var restype = Assembly.GetExecutingAssembly().GetType(typename);
+
+                            return factory.Create(typename, "Resources");
+                        }
+                        else
+                         if (type.Name.IndexOf("controller") >= 0)
+                        {
+                            return factory.Create(typeof(CommonLanguage.MVCLang.MvcResources));
+                        }
+                        else
+                            return factory.Create(typeof(Resources.MyLang));
+                    };
+                }); //不要重写 DataAnnotationLocalizerProvider，否则需要自己管理 资源文件
             //.AddJsonOptions(opts =>
             //{
             //    //驼峰
@@ -321,7 +342,7 @@ namespace NetCoreTemp.WebApi
 
             #endregion
 
-            //视图显示提供者
+            ////视图显示提供者
             //services.AddSingleton<Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider, My_ModelMetadataProvider>();
 
             #region 自定义验证器
@@ -331,14 +352,16 @@ namespace NetCoreTemp.WebApi
             {
                 serviceProvider = sp;
                 var memoryCache = sp.GetService<IMemoryCache>();
-                var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer>();
-                var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
+                var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
+                var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizerFactory>();
                 return new MyModelValidatorProvider(memoryCache, stringLocalizer, sharedLocalizer);
             });
 
             services.Configure<MvcOptions>(opts =>
             {
                 var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
+                var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
+                opts.ModelValidatorProviders.Clear();
                 opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
             });
 

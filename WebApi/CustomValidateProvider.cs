@@ -21,6 +21,7 @@ namespace NetCoreTemp.WebApi
     public class My_ModelMetadataProvider : DefaultModelMetadataProvider
     {
         protected IOptions<MvcOptions> _optionsAccessor;
+
         /// <summary>
         ///  Creates a new Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.DefaultModelMetadataProvider.
         /// </summary>
@@ -48,78 +49,121 @@ namespace NetCoreTemp.WebApi
         /// <returns></returns>
         protected override ModelMetadata CreateModelMetadata(DefaultMetadataDetails entry)
         {
-            if (entry.ModelAttributes?.TypeAttributes?.Any(x => x.GetType().IsAssignableFrom(typeof(MetadataTypeAttribute))) == true)
+            //if (entry.ModelAttributes?.TypeAttributes?.Any(x => x.GetType().IsAssignableFrom(typeof(MetadataTypeAttribute))) == true)
+            //{
+            //    if (entry.Key.ModelType?.BaseType == typeof(Models.BaseModel.BaseEntity))
+            //    {
+            //        if (entry.Key.ModelType?.Name == "User")
+            //        {
+            //            if (entry.ValidationMetadata == null)
+            //                entry.ValidationMetadata = new ValidationMetadata { };
+            //            entry.ValidationMetadata.ValidatorMetadata.Add(new RequiredAttribute()
+            //            {
+            //                ErrorMessageResourceName = "RequiredAttribute_ValidationError",
+            //                ErrorMessageResourceType = typeof(CommonLanguage.Language)
+            //            });
+            //        }
+            //        //var modelType = entry.Key.ModelType;
+            //        //var metadataType = modelType.GetCustomAttributes<MetadataTypeAttribute>(true).FirstOrDefault();
+            //        ////netCore.MVC
+            //        ////var metadataType = modelType.GetCustomAttributes<ModelMetadataTypeAttribute>(true).FirstOrDefault();
+            //        //if (metadataType?.MetadataClassType != null)
+            //        //{
+            //        //    var ArrProp = metadataType?.MetadataClassType.GetProperties();
+            //        //    List<object> ArrValidatorMetadata = new List<object>();
+            //        //    if (ArrProp?.Any() == true)
+            //        //    {
+            //        //        foreach (var item in ArrProp)
+            //        //        {
+            //        //            var QArrProp = item.GetCustomAttributes().OfType<ValidationAttribute>();
+            //        //            ArrValidatorMetadata.AddRange(QArrProp);
+            //        //        }
+            //        //    }
+            //        //    //entry.BindingMetadata = new BindingMetadata { BinderType = metadataType?.MetadataClassType };
+
+            //        //    entry.DisplayMetadata = new DisplayMetadata { DisplayName = () => "DisplayName" };
+            //        //    //if (ArrValidatorMetadata.Any())
+            //        //    //{
+            //        //    //    if (entry.ValidationMetadata == null)
+            //        //    //        entry.ValidationMetadata = new ValidationMetadata { };
+
+            //        //    //    foreach (var item in ArrValidatorMetadata)
+            //        //    //        entry.ValidationMetadata.ValidatorMetadata.Add(item);
+            //        //    //}
+            //        //}
+            //    }
+            //}
+            if (entry.Key.ModelType?.Name == "User")
             {
-                if (entry.Key.ModelType?.BaseType == typeof(Models.BaseModel.BaseEntity))
-                {
-                    var modelType = entry.Key.ModelType;
-                    var metadataType = modelType.GetCustomAttributes<MetadataTypeAttribute>(true).FirstOrDefault();
-                    //netCore.MVC
-                    //var metadataType = modelType.GetCustomAttributes<ModelMetadataTypeAttribute>(true).FirstOrDefault();
-                    if (metadataType?.MetadataClassType != null)
-                    {
-                        var ArrProp = metadataType?.MetadataClassType.GetProperties();
-                        List<object> ArrValidatorMetadata = new List<object>();
-                        if (ArrProp?.Any() == true)
-                        {
-                            foreach (var item in ArrProp)
-                            {
-                                var QArrProp = item.GetCustomAttributes().OfType<ValidationAttribute>();
-                                ArrValidatorMetadata.AddRange(QArrProp);
-                            }
-                        }
-                        //entry.BindingMetadata = new BindingMetadata { BinderType = metadataType?.MetadataClassType };
+                //var re = new RequiredAttribute
+                //{
+                //    ErrorMessage = "自定义ErrorMessage"
+                //};
+                //////为类增加 特性
+                ////System.ComponentModel.TypeDescriptor.AddAttributes(entry.Key.ModelType, re);
 
-                        entry.DisplayMetadata = new DisplayMetadata { DisplayName = () => "DisplayName" };
-                        //if (ArrValidatorMetadata.Any())
-                        //{
-                        //    if (entry.ValidationMetadata == null)
-                        //        entry.ValidationMetadata = new ValidationMetadata { };
-
-                        //    foreach (var item in ArrValidatorMetadata)
-                        //        entry.ValidationMetadata.ValidatorMetadata.Add(item);
-                        //}
-                    }
-                }
+                //System.ComponentModel.PropertyDescriptorCollection appSetingAttributes = System.ComponentModel.TypeDescriptor.GetProperties(entry.Key.ModelType);
+                //var prop = appSetingAttributes["Test"];
+                //var attributeArrayPropInfo = prop.GetType().GetProperty("AttributeArray", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                //var attributeArray = attributeArrayPropInfo.GetValue(prop, null) as Attribute[];
+                //var length = attributeArray.Length;
+                //var newArray = new Attribute[length + 1];
+                //attributeArray.CopyTo(newArray, 0);
+                //newArray[length] = re;
+                //attributeArrayPropInfo.SetValue(prop, newArray, null);
+                
+                //var identity = ModelMetadataIdentity.ForType(entry.Key.ModelType);
+                //DefaultMetadataDetails details = CreateTypeDetails(identity);
+                //var a = ModelAttributes.GetAttributesForType(entry.Key.ModelType);
+                //entry = new DefaultMetadataDetails(entry.Key, a);
             }
             var modelMeta = base.CreateModelMetadata(entry);
             return modelMeta;
         }
 
-        //public override ModelMetadata GetMetadataForProperty(PropertyInfo propertyInfo, Type modelType)
-        //{
-        //    var identity = ModelMetadataIdentity.ForType(modelType);
-        //    DefaultMetadataDetails details = CreateTypeDetails(identity);
-        //    var meta = base.GetMetadataForProperty(propertyInfo, modelType);
-        //    return meta;
-        //}
+        public override ModelMetadata GetMetadataForProperty(PropertyInfo propertyInfo, Type modelType)
+        {
+            if (modelType.Name == "User")
+            {
+                var identity = ModelMetadataIdentity.ForType(modelType);
+                DefaultMetadataDetails details = CreateTypeDetails(identity);
+            }
+            var meta = base.GetMetadataForProperty(propertyInfo, modelType);
+            return meta;
+        }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="modelType"></param>
-        ///// <returns></returns>
-        //public override ModelMetadata GetMetadataForType(Type modelType)
-        //{
-        //    //  Optimization for intensively used System.Object
-        //    if (modelType == typeof(object))
-        //    {
-        //        return base.GetMetadataForType(modelType);
-        //    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelType"></param>
+        /// <returns></returns>
+        public override ModelMetadata GetMetadataForType(Type modelType)
+        {
+            //  Optimization for intensively used System.Object
+            if (modelType == typeof(object))
+            {
+                return base.GetMetadataForType(modelType);
+            }
+            if (modelType.Name == "User")
+            {
+                var identity = ModelMetadataIdentity.ForType(modelType);
+                DefaultMetadataDetails details = CreateTypeDetails(identity);
+            }
 
-        //    var identity = ModelMetadataIdentity.ForType(modelType);
-        //    DefaultMetadataDetails details = CreateTypeDetails(identity);
+            //var identity = ModelMetadataIdentity.ForType(modelType);
+            //DefaultMetadataDetails details = CreateTypeDetails(identity);
 
-        //    //  This part contains the same logic as DefaultModelMetadata.DisplayMetadata property
-        //    //  See https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.Core/ModelBinding/Metadata/DefaultModelMetadata.cs
+            ////  This part contains the same logic as DefaultModelMetadata.DisplayMetadata property
+            ////  See https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.Core/ModelBinding/Metadata/DefaultModelMetadata.cs
 
-        //    var context = new DisplayMetadataProviderContext(identity, details.ModelAttributes);
-        //    //  Here your implementation of IDisplayMetadataProvider will be called
-        //    DetailsProvider.CreateDisplayMetadata(context);
-        //    details.DisplayMetadata = context.DisplayMetadata;
+            //var context = new DisplayMetadataProviderContext(identity, details.ModelAttributes);
+            ////  Here your implementation of IDisplayMetadataProvider will be called
+            //DetailsProvider.CreateDisplayMetadata(context);
+            //details.DisplayMetadata = context.DisplayMetadata;
+            //return CreateModelMetadata(details);
 
-        //    return CreateModelMetadata(details);
-        //}
+            return base.GetMetadataForType(modelType);
+        }
 
     }
 
@@ -131,27 +175,30 @@ namespace NetCoreTemp.WebApi
         private static readonly object _emptyValidationContextInstance = new object();
         public ValidationAttribute Attribute { get; }
         private readonly IStringLocalizer _stringLocalizer;
+        IStringLocalizerFactory _stringLocalizerFactory;
         private readonly IValidationAttributeAdapterProvider _validationAttributeAdapterProvider = new ValidationAttributeAdapterProvider();
         IMemoryCache _memoryCache;
 
-        public MyModelValidator(IMemoryCache memoryCache, IStringLocalizer stringLocalizer)
+        public MyModelValidator(IMemoryCache memoryCache, IStringLocalizer stringLocalizer, IStringLocalizerFactory  stringLocalizerFactory)
         {
             _memoryCache = memoryCache;
             _stringLocalizer = stringLocalizer;
+            _stringLocalizerFactory = stringLocalizerFactory;
         }
 
-        public MyModelValidator(IMemoryCache memoryCache, ValidationAttribute attribute, IStringLocalizer stringLocalizer)
-            : this(memoryCache, stringLocalizer)
+        public MyModelValidator(IMemoryCache memoryCache, ValidationAttribute attribute, IStringLocalizer stringLocalizer, IStringLocalizerFactory stringLocalizerFactory)
+            : this(memoryCache, stringLocalizer, stringLocalizerFactory)
         {
             Attribute = attribute;
         }
 
-        public MyModelValidator(ValidationAttribute attribute, IStringLocalizer stringLocalizer, IValidationAttributeAdapterProvider validationAttributeAdapterProvider = null)
+        public MyModelValidator(ValidationAttribute attribute, IStringLocalizer stringLocalizer, IStringLocalizerFactory stringLocalizerFactory, IValidationAttributeAdapterProvider validationAttributeAdapterProvider = null)
         {
             if (validationAttributeAdapterProvider != null)
                 _validationAttributeAdapterProvider = validationAttributeAdapterProvider;
             Attribute = attribute;
             _stringLocalizer = stringLocalizer;
+            _stringLocalizerFactory = stringLocalizerFactory;
         }
 
         /// <summary>
@@ -168,69 +215,71 @@ namespace NetCoreTemp.WebApi
             var metadataKind = metadata.MetadataKind;
             var memberName = metadata.Name;
             var container = context.Container;
-            //var  lang = context.ActionContext.HttpContext.Request.Headers["Content-Language"]?.ToString() ?? "zh-cn";
-            //_stringLocalizer.WithCulture
+            Type modelType = context.ModelMetadata.ModelType;
+            if (!modelType.IsClass || modelType.IsPrimitive || modelType == typeof(string) || modelType.Name == "Object")
+                modelType = context.Container.GetType();
+            #region 获取MetadataType class 属性
+
+            var ArrMetadataProp = MyModelValidatorProvider.GetTypeProp(modelType, _memoryCache);
+
+            #endregion
             switch (metadataKind)
             {
+                case ModelMetadataKind.Parameter:
                 case ModelMetadataKind.Type:
-                    var ValidationAttrs = container.GetType().GetCustomAttributes().OfType<ValidationAttribute>();
-                    foreach (var attr in ValidationAttrs)
+                    //基类 属性
+                    var ArrProp = ArrMetadataProp.Where(x => !x.IsMeta);
+                    //基类元数据 属性
+                    var ArrMetaProp = ArrMetadataProp.Where(x => x.IsMeta);
+                    foreach (var prop in ArrProp)
                     {
-                        var _memberName = container.GetType().Name;
+                        //基类 验证属性
+                        var PropValidationAttrs = prop.ArrCustomAttr.OfType<ValidationAttribute>();
+                        var metaProp = ArrMetaProp.Where(x => x.prop.Name == prop.prop.Name)?.FirstOrDefault();
+                        //基类元数据 验证属性
+                        var MetaValidationAttrs = metaProp?.ArrCustomAttr?.OfType<ValidationAttribute>();
+                        //合并属性
+                        var ValidationAttrs = PropValidationAttrs;
+                        if (MetaValidationAttrs != null)
+                            ValidationAttrs = ValidationAttrs.Union(MetaValidationAttrs);
+                        var _memberName = prop.prop.Name;
+                        var _metadataDisplay = metaProp?.ArrCustomAttr?.OfType<DisplayAttribute>().FirstOrDefault();
+                        //基类 属性值
+                        var modelValue = prop.prop.GetValue(container ?? context.Model);
                         var _validcontext = new ValidationContext(
                         instance: container ?? context.Model ?? _emptyValidationContextInstance,
                         serviceProvider: context.ActionContext?.HttpContext?.RequestServices,
                         items: null)
                         {
-                            DisplayName = metadata.GetDisplayName(),
-                            MemberName = _memberName
+                            DisplayName = _metadataDisplay?.Name ?? _memberName,
+                            MemberName = _memberName//$"{metadata.GetDisplayName()}.{_memberName}"
                         };
-                        var _result = Attribute.GetValidationResult(context.Model, _validcontext);
-                        addModelValidationResult(context, _memberName, _result, modelValidationResults);
+                        foreach (var attr in ValidationAttrs)
+                        {
+                            var _result = attr.GetValidationResult(modelValue, _validcontext);
+                            addModelValidationResult(context, _memberName, _result, modelValidationResults);
+                        }
                     }
                     break;
                 case ModelMetadataKind.Property:
+                    var  s = System.Globalization.CultureInfo.CurrentCulture;
+                    //var ss = _stringLocalizer?.GetString("Create");
+                    var tt= this.GetType().Assembly.GetType(modelType.FullName.Replace("NetCoreTemp.WebApi.Models.", "NetCoreTemp.WebApi.Resources.Models."));
+                    var displayName = _stringLocalizerFactory.Create(tt??modelType).GetString(memberName);
                     var _attribute = Attribute;
-                    IEnumerable<PropertyInfo> ArrMetadataProp = null;
-                    var modelType = context.Container.GetType();
-                    var cacheName = modelType.FullName + "Metadata";
-                    var ObjMetadataProp = _memoryCache.Get(cacheName);
-
-                    if (ObjMetadataProp != null)
-                    {
-                        ArrMetadataProp = (IEnumerable<PropertyInfo>)ObjMetadataProp;
-                    }
-                    else
-                    {
-                        Type _metadataType;
-                        var _metadataTypeAttr = modelType.GetCustomAttributes<MetadataTypeAttribute>(true).FirstOrDefault();
-                        _metadataType = _metadataTypeAttr?.MetadataClassType;
-                        var _modelmetadataTypeAttr = modelType.GetCustomAttributes<ModelMetadataTypeAttribute>(true).FirstOrDefault();
-                        if (_modelmetadataTypeAttr != null)
-                            _metadataType = _modelmetadataTypeAttr?.MetadataType;
-
-                        if (_metadataType != null)
-                        {
-                            ArrMetadataProp = _metadataType.GetProperties();
-                            _memoryCache.Set(cacheName, ArrMetadataProp);
-                        }
-                    }
-                    var metadataDisplay = ArrMetadataProp?.Where(x => x.Name == memberName)?.FirstOrDefault().GetCustomAttribute<DisplayAttribute>();
+                    var metadataDisplay = ArrMetadataProp?.Where(x => x.IsMeta && x.prop.Name == memberName)?.FirstOrDefault().ArrCustomAttr?.OfType<DisplayAttribute>().FirstOrDefault();
                     var validcontext = new ValidationContext(
                         instance: container ?? context.Model ?? _emptyValidationContextInstance,
                         serviceProvider: context.ActionContext?.HttpContext?.RequestServices,
                         items: null)
                     {
-                        DisplayName = metadataDisplay?.Name ?? metadata.GetDisplayName(),
+                        DisplayName = displayName ?? metadataDisplay?.Name ?? metadata.GetDisplayName(),
                         MemberName = memberName
                     };
                     var result = _attribute.GetValidationResult(context.Model, validcontext);
                     addModelValidationResult(context, memberName, result, modelValidationResults);
                     break;
-                case ModelMetadataKind.Parameter:
-                    break;
             }
-
             return modelValidationResults;
         }
 
@@ -243,9 +292,6 @@ namespace NetCoreTemp.WebApi
         /// <param name="modelValidationResults"></param>
         private void addModelValidationResult(ModelValidationContext context, string memberName, ValidationResult result, List<ModelValidationResult> modelValidationResults)
         {
-            var c = System.Globalization.CultureInfo.CurrentCulture;
-            var c2 = System.Globalization.CultureInfo.DefaultThreadCurrentCulture;
-            var c3 = System.Globalization.CultureInfo.DefaultThreadCurrentUICulture;
             if (result != null)
             {
                 string? errorMessage;
@@ -312,14 +358,15 @@ namespace NetCoreTemp.WebApi
         static FieldInfo _errMsgFieldInfo = _type.GetField("_errorMessage", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private readonly IStringLocalizer _stringLocalizer;
-        private readonly IStringLocalizer<CommonLanguage.Language> _sharedLocalizer;
+        private readonly IStringLocalizerFactory _sharedLocalizerFac;
         IMemoryCache _memoryCache;
 
-        public MyModelValidatorProvider(IMemoryCache memoryCache, IStringLocalizer stringLocalizer, IStringLocalizer<CommonLanguage.Language> sharedLocalizer)
+        public MyModelValidatorProvider(IMemoryCache memoryCache, IStringLocalizer stringLocalizer, IStringLocalizerFactory sharedLocalizer)
         {
             _memoryCache = memoryCache;
             _stringLocalizer = stringLocalizer;
-            _sharedLocalizer = sharedLocalizer;
+
+            _sharedLocalizerFac = sharedLocalizer;
         }
 
         public void CreateValidators(ModelValidatorProviderContext context)
@@ -328,92 +375,85 @@ namespace NetCoreTemp.WebApi
                 return;
             //var MyVldAttrAdp = new MyValidationAttributeAdapterProvider();
             var propName = context.ModelMetadata.PropertyName;
-            var modelType = context.ModelMetadata.ContainerType;
+            var modelType = context.ModelMetadata.ModelType;
+            if (!modelType.IsClass || modelType.IsPrimitive || modelType == typeof(string) || modelType.Name == "Object")
+                modelType = context.ModelMetadata.ContainerType;
 
             #region 获取MetaDataType类的属性&缓存属性
 
-            IEnumerable<PropertyInfo> ArrMetadataProp = null;
-            var cacheName = modelType.FullName + "Metadata";
-            var ObjMetadataProp = _memoryCache.Get(cacheName);
-
-            if (ObjMetadataProp != null)
-            {
-                ArrMetadataProp = (IEnumerable<PropertyInfo>)ObjMetadataProp;
-            }
-            else
-            {
-                Type _metadataType;
-                var _metadataTypeAttr = modelType.GetCustomAttributes<MetadataTypeAttribute>(true).FirstOrDefault();
-                _metadataType = _metadataTypeAttr?.MetadataClassType;
-                var _modelmetadataTypeAttr = modelType.GetCustomAttributes<ModelMetadataTypeAttribute>(true).FirstOrDefault();
-                if (_modelmetadataTypeAttr != null)
-                    _metadataType = _modelmetadataTypeAttr?.MetadataType;
-
-                if (_metadataType != null)
-                {
-                    ArrMetadataProp = _metadataType.GetProperties();
-                    _memoryCache.Set(cacheName, ArrMetadataProp);
-                }
-            }
-
-            #endregion
-
-            #region MetaDataType类里的验证属性
-
-            List<ValidationAttribute> ArrValidMetadata = new List<ValidationAttribute>();
-
-            var QArrMetadataProp = ArrMetadataProp?.Where(x => x.Name == propName);
-            if (QArrMetadataProp?.Any() == true)
-            {
-                var ArrCusAttr = QArrMetadataProp.FirstOrDefault().GetCustomAttributes();
-                var _ValidationAttrs = ArrCusAttr.OfType<ValidationAttribute>();
-                ArrValidMetadata.AddRange(_ValidationAttrs);
-            }
+            var ArrMetadataProp = GetTypeProp(modelType, _memoryCache);
 
             #endregion
 
             switch (context.ModelMetadata.MetadataKind)
             {
+                case ModelMetadataKind.Parameter:
                 case ModelMetadataKind.Type:
-                    #region 注入自定义IModelValidator
+                    var ArrModelValidtion = modelType.GetCustomAttributes().OfType<ValidationAttribute>();
+                    foreach (var mvld in ArrModelValidtion)
+                    {
+                        var __myModelValidator = new MyModelValidator(_memoryCache, mvld, _stringLocalizer, _sharedLocalizerFac);
+                        context.Results.Add(new ValidatorItem(context.ModelMetadata)
+                        {
+                            IsReusable = true,
+                            Validator = __myModelValidator
+                        });
+                    }
 
-                    var _myModelValidator = new MyModelValidator(_memoryCache, _stringLocalizer);
-                    context.Results.Add(new ValidatorItem(null)
+                    #region 类型验证 注入自定义IModelValidator
+
+                    var _myModelValidator = new MyModelValidator(_memoryCache, _stringLocalizer, _sharedLocalizerFac);
+                    context.Results.Add(new ValidatorItem(context.ModelMetadata)
                     {
                         IsReusable = true,
                         Validator = _myModelValidator
                     });
 
                     #endregion
+
                     break;
                 case ModelMetadataKind.Property:
+                    #region 属性验证
+
+                    var QArrMetadataProp = ArrMetadataProp.Where(x => x.prop.Name == propName);
                     var resultsCount = context.Results.Count;
+
+                    if (!context.Results.Any())
+                    {
+                        //增加 基类ValidationAttribute
+                        var ArrValidAttr = QArrMetadataProp.Where(n => !n.IsMeta).SelectMany(x => x.ArrCustomAttr.OfType<ValidationAttribute>());
+                        foreach (var _validAttr in ArrValidAttr)
+                        {
+                            var _MyModelValidator = new MyModelValidator(_memoryCache, _validAttr, _stringLocalizer, _sharedLocalizerFac);
+                            context.Results.Add(new ValidatorItem(_validAttr)
+                            {
+                                IsReusable = true,
+                                Validator = _MyModelValidator
+                            });
+                        }
+                    }
+                    //元数据验证属性
+                    var ArrValidMetadata = QArrMetadataProp.Where(n => n.IsMeta).SelectMany(x => x.ArrCustomAttr.OfType<ValidationAttribute>());
                     for (var i = 0; i < resultsCount; i++)
                     {
                         var validitem = context.Results[i];
-                        var QArrValidMetadata = ArrValidMetadata?.Where(x => x.GetType() == validitem.ValidatorMetadata.GetType());
-                        if (QArrValidMetadata?.Any() == true)
+                        IEnumerable<ValidationAttribute> QArrValidMetadata = ArrValidMetadata?.Where(x => x.GetType() == validitem.ValidatorMetadata.GetType());
+                        if (QArrValidMetadata?.Any() != true)
                         {
-                            var validationAttr = QArrValidMetadata.FirstOrDefault();
-                            SetErrMsgByResource(validationAttr);
-                            var _MyModelValidator = new MyModelValidator(_memoryCache, validationAttr, _stringLocalizer);
-                            validitem.Validator = _MyModelValidator;
-                            context.Results.Remove(validitem);
-                            context.Results.Insert(0, validitem);
+                            QArrValidMetadata = QArrMetadataProp.Where(n => !n.IsMeta).SelectMany(x => x.ArrCustomAttr.OfType<ValidationAttribute>()).Where(n => n.GetType() == validitem.ValidatorMetadata.GetType());
                         }
-                        else
-                        {
-                            if (validitem.ValidatorMetadata is ValidationAttribute validationAttr)
-                                SetErrMsgByResource(validationAttr);
-                        }
+                        var validationAttr = QArrValidMetadata.FirstOrDefault();
+                        var _MyModelValidator = new MyModelValidator(_memoryCache, validationAttr, _stringLocalizer, _sharedLocalizerFac);
+                        validitem.Validator = _MyModelValidator;
+                        context.Results.Remove(validitem);
+                        context.Results.Insert(0, validitem);
                     }
                     var QAddMetadataValidator = ArrValidMetadata?.Where(x => !context.Results.Any(n => n.ValidatorMetadata?.GetType() == x.GetType()));
                     if (QAddMetadataValidator?.Any() == true)
                     {
                         foreach (var vldMeta in QAddMetadataValidator)
                         {
-                            SetErrMsgByResource(vldMeta);
-                            var _MyModelValidator = new MyModelValidator(_memoryCache, vldMeta, _stringLocalizer);
+                            var _MyModelValidator = new MyModelValidator(_memoryCache, vldMeta, _stringLocalizer, _sharedLocalizerFac);
                             context.Results.Add(new ValidatorItem(vldMeta)
                             {
                                 IsReusable = true,
@@ -421,8 +461,8 @@ namespace NetCoreTemp.WebApi
                             });
                         }
                     }
-                    break;
-                case ModelMetadataKind.Parameter:
+
+                    #endregion
                     break;
             }
         }
@@ -438,23 +478,13 @@ namespace NetCoreTemp.WebApi
             if (validatorMetadata.Any())
                 return true;
             var has = false;
-            var cacheName = modelType.FullName + "Metadata";
-            var ObjMetadataProp = _memoryCache.Get(cacheName);
-            IEnumerable<PropertyInfo> ArrMetadataProp = null;
-            if (ObjMetadataProp != null)
+            if (modelType.IsClass && !modelType.IsPrimitive && modelType != typeof(string) && modelType.Name != "Object")
             {
-                ArrMetadataProp = (IEnumerable<PropertyInfo>)ObjMetadataProp;
+                //获取 Type类的属性和自定义属性(包括元数据的)
+                var ArrMetadataProp = GetTypeProp(modelType, _memoryCache);
+
+                has = ArrMetadataProp?.Any(x => x.ArrCustomAttr.OfType<ValidationAttribute>().Any()) == true;
             }
-            else
-            {
-                var metadataType = modelType.GetCustomAttributes<MetadataTypeAttribute>(true).FirstOrDefault();
-                if (metadataType?.MetadataClassType != null)
-                {
-                    _memoryCache.Set(cacheName, metadataType.MetadataClassType.GetProperties());
-                }
-            }
-            var Arr = ArrMetadataProp?.Where(x => x.GetCustomAttributes<ValidationAttribute>(true)?.Any() == true);
-            has = Arr?.Any() == true;
             return has;
         }
 
@@ -463,7 +493,7 @@ namespace NetCoreTemp.WebApi
         /// 存在ErrorMessage或存在 Resource设置，则不在自动设置(手动实现多语言验证错误信息)
         /// </summary>
         /// <param name="validMetadata"></param>
-        private void SetErrMsgByResource(ValidationAttribute validMetadata)
+        public static void SetErrMsgByResource(ValidationAttribute validMetadata)
         {
             var needResourceSet = true;
             var vldAttr = validMetadata;
@@ -603,6 +633,67 @@ namespace NetCoreTemp.WebApi
                 vldAttr.ErrorMessage = null;
                 vldAttr.ErrorMessageResourceType = typeof(CommonLanguage.Language);
             }
+        }
+
+        /// <summary>
+        /// 获取 Type类的属性和自定义属性(包括元数据的)
+        /// </summary>
+        /// <param name="modelType">类</param>
+        /// <param name="_memoryCache">缓存</param>
+        /// <returns></returns>
+        public static IEnumerable<(PropertyInfo prop, bool IsMeta, IEnumerable<Attribute> ArrCustomAttr)> GetTypeProp(Type modelType, IMemoryCache _memoryCache = null)
+        {
+            List<(PropertyInfo prop, bool IsMeta, IEnumerable<Attribute> ArrCustomAttr)> ArrModelMetadataProp = new List<(PropertyInfo prop, bool IsMeta, IEnumerable<Attribute> ArrCustomAttr)>();
+            var cacheName = modelType.FullName + "Prop_Metadata";
+            Object ObjMetadataProp = null;
+
+            System.Runtime.Caching.MemoryCache cache = null;
+            if (_memoryCache == null)
+            {
+                cache = System.Runtime.Caching.MemoryCache.Default;
+                ObjMetadataProp = cache.Get(cacheName);
+            }
+            else
+                ObjMetadataProp = _memoryCache.Get(cacheName);
+
+            if (ObjMetadataProp != null)
+            {
+                ArrModelMetadataProp = (List<(PropertyInfo prop, bool IsMeta, IEnumerable<Attribute> ArrCustomAttr)>)ObjMetadataProp;
+            }
+            else
+            {
+                //基类 属性&自定义属性
+                var ArrModelTypeProp = modelType.GetProperties().Select(x => (prop: x, IsMeta: false, ArrCustomAttr: x.GetCustomAttributes()));
+                ArrModelMetadataProp.AddRange(ArrModelTypeProp);
+                #region 根据基类，获取元数据类型 asp.NetCore.MVC MetadataTypeAttribute 已启用，使用ModelMetadataTypeAttribute
+
+                Type _metadataType;
+                var _metadataTypeAttr = modelType.GetCustomAttributes<MetadataTypeAttribute>(true).FirstOrDefault();
+                _metadataType = _metadataTypeAttr?.MetadataClassType;
+                var _modelmetadataTypeAttr = modelType.GetCustomAttributes<ModelMetadataTypeAttribute>(true).FirstOrDefault();
+                if (_modelmetadataTypeAttr != null)
+                    _metadataType = _modelmetadataTypeAttr?.MetadataType;
+
+                #endregion
+
+                if (_metadataType != null)
+                {
+                    ArrModelMetadataProp.AddRange(_metadataType.GetProperties().Select(x => (prop: x, IsMeta: true, ArrCustomAttr: x.GetCustomAttributes())));
+                }
+                //设置缓存
+                if (_memoryCache == null)
+                    cache.Set(cacheName, ArrModelMetadataProp, DateTimeOffset.Now.AddHours(8));
+                else
+                    _memoryCache.Set(cacheName, ArrModelMetadataProp);
+
+                //设置验证属性国际化
+                var ArrCusAttr = ArrModelMetadataProp.SelectMany(x => x.ArrCustomAttr.OfType<ValidationAttribute>());
+                foreach (var vldAttr in ArrCusAttr)
+                {
+                    SetErrMsgByResource(vldAttr);
+                }
+            }
+            return ArrModelMetadataProp;
         }
     }
 
