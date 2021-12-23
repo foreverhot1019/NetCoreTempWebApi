@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -13,7 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
-namespace NetCoreTemp.WebApi
+namespace LocalizerCustomValidation
 {
     /// <summary>
     /// 数据显示-适配器
@@ -111,7 +110,7 @@ namespace NetCoreTemp.WebApi
                 //attributeArray.CopyTo(newArray, 0);
                 //newArray[length] = re;
                 //attributeArrayPropInfo.SetValue(prop, newArray, null);
-                
+
                 //var identity = ModelMetadataIdentity.ForType(entry.Key.ModelType);
                 //DefaultMetadataDetails details = CreateTypeDetails(identity);
                 //var a = ModelAttributes.GetAttributesForType(entry.Key.ModelType);
@@ -179,7 +178,7 @@ namespace NetCoreTemp.WebApi
         private readonly IValidationAttributeAdapterProvider _validationAttributeAdapterProvider = new ValidationAttributeAdapterProvider();
         IMemoryCache _memoryCache;
 
-        public MyModelValidator(IMemoryCache memoryCache, IStringLocalizer stringLocalizer, IStringLocalizerFactory  stringLocalizerFactory)
+        public MyModelValidator(IMemoryCache memoryCache, IStringLocalizer stringLocalizer, IStringLocalizerFactory stringLocalizerFactory)
         {
             _memoryCache = memoryCache;
             _stringLocalizer = stringLocalizer;
@@ -223,6 +222,9 @@ namespace NetCoreTemp.WebApi
             var ArrMetadataProp = MyModelValidatorProvider.GetTypeProp(modelType, _memoryCache);
 
             #endregion
+            //类所在程序集
+            var asm = Assembly.GetAssembly(modelType);
+            var tt = asm?.GetType(modelType.FullName.Replace("NetCoreTemp.WebApi.Models.", "NetCoreTemp.WebApi.Models.Resources."));
             switch (metadataKind)
             {
                 case ModelMetadataKind.Parameter:
@@ -243,15 +245,28 @@ namespace NetCoreTemp.WebApi
                         if (MetaValidationAttrs != null)
                             ValidationAttrs = ValidationAttrs.Union(MetaValidationAttrs);
                         var _memberName = prop.prop.Name;
-                        var _metadataDisplay = metaProp?.ArrCustomAttr?.OfType<DisplayAttribute>().FirstOrDefault();
+
+                        //显示名称，读取国际化配置
+                        var _displayName = _memberName;
+                        var _memberLocalized = _stringLocalizerFactory.Create(tt ?? modelType).GetString(_memberName);
+                        if (_memberLocalized.ResourceNotFound)
+                        {
+                            var _metadataDisplay = metaProp?.ArrCustomAttr?.OfType<DisplayAttribute>().FirstOrDefault();
+                            _displayName = _metadataDisplay?.Name ?? _memberName;
+                        }
+                        else
+                        {
+                            _displayName = _memberLocalized.Value;
+                        }
+
                         //基类 属性值
                         var modelValue = prop.prop.GetValue(container ?? context.Model);
                         var _validcontext = new ValidationContext(
-                        instance: container ?? context.Model ?? _emptyValidationContextInstance,
-                        serviceProvider: context.ActionContext?.HttpContext?.RequestServices,
-                        items: null)
+                            instance: container ?? context.Model ?? _emptyValidationContextInstance,
+                            serviceProvider: context.ActionContext?.HttpContext?.RequestServices,
+                            items: null)
                         {
-                            DisplayName = _metadataDisplay?.Name ?? _memberName,
+                            DisplayName = _displayName,
                             MemberName = _memberName//$"{metadata.GetDisplayName()}.{_memberName}"
                         };
                         foreach (var attr in ValidationAttrs)
@@ -262,16 +277,25 @@ namespace NetCoreTemp.WebApi
                     }
                     break;
                 case ModelMetadataKind.Property:
-                    var tt = this.GetType().Assembly.GetType(modelType.FullName.Replace("NetCoreTemp.WebApi.Models.", "NetCoreTemp.WebApi.Resources.Models."));
-                    var displayName = _stringLocalizerFactory.Create(tt??modelType).GetString(memberName);
                     var _attribute = Attribute;
-                    var metadataDisplay = ArrMetadataProp?.Where(x => x.IsMeta && x.prop.Name == memberName)?.FirstOrDefault().ArrCustomAttr?.OfType<DisplayAttribute>().FirstOrDefault();
+                    //显示名称，读取国际化配置
+                    var displayName = memberName;
+                    var memberLocalized = _stringLocalizerFactory.Create(tt ?? modelType).GetString(memberName);
+                    if (memberLocalized.ResourceNotFound)
+                    {
+                        var metadataDisplay = ArrMetadataProp?.Where(x => x.IsMeta && x.prop.Name == memberName)?.FirstOrDefault().ArrCustomAttr?.OfType<DisplayAttribute>().FirstOrDefault();
+                        displayName = metadataDisplay?.Name ?? memberName;
+                    }
+                    else
+                    {
+                        displayName = memberLocalized.Value;
+                    }
                     var validcontext = new ValidationContext(
                         instance: container ?? context.Model ?? _emptyValidationContextInstance,
                         serviceProvider: context.ActionContext?.HttpContext?.RequestServices,
                         items: null)
                     {
-                        DisplayName = displayName ?? metadataDisplay?.Name ?? metadata.GetDisplayName(),
+                        DisplayName = displayName,
                         MemberName = memberName
                     };
                     var result = _attribute.GetValidationResult(context.Model, validcontext);
@@ -351,12 +375,24 @@ namespace NetCoreTemp.WebApi
     /// </summary>
     public class MyModelValidatorProvider : IMetadataBasedModelValidatorProvider, IModelValidatorProvider
     {
+        //验证特性type
         static Type _type = typeof(ValidationAttribute);
+        //默认错误信息
         static FieldInfo _defaultErrorMessageFieldInfo = _type.GetField("_defaultErrorMessage", BindingFlags.Instance | BindingFlags.NonPublic);
+        //错误信息（为设置的话，读取默认错误信息）
         static FieldInfo _errMsgFieldInfo = _type.GetField("_errorMessage", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        /// <summary>
+        /// CommonLanguage.Language
+        /// </summary>
         private readonly IStringLocalizer _stringLocalizer;
+        /// <summary>
+        /// 国际化工厂
+        /// </summary>
         private readonly IStringLocalizerFactory _sharedLocalizerFac;
+        /// <summary>
+        /// 缓存
+        /// </summary>
         IMemoryCache _memoryCache;
 
         public MyModelValidatorProvider(IMemoryCache memoryCache, IStringLocalizer stringLocalizer, IStringLocalizerFactory sharedLocalizer)
@@ -507,92 +543,6 @@ namespace NetCoreTemp.WebApi
 
             switch (validMetadata)
             {
-                #region MyRegion
-
-                //case RequiredAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RequiredAttribute_ValidationError";
-                //    }
-                //    break;
-                //case EnumDataTypeAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "EnumDataTypeAttribute_TypeNeedsToBeAnEnum";
-                //    }
-                //    break;
-
-                //case MinLengthAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        //StringLengthAttribute_ValidationError
-                //        validator.ErrorMessageResourceName = "MinLengthAttribute_ValidationError";
-                //    }
-                //    break;
-                //case MaxLengthAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        //StringLengthAttribute_ValidationError
-                //        validator.ErrorMessageResourceName = "MaxLengthAttribute_ValidationError";
-                //    }
-                //    break;
-                //case RangeAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RangeAttribute_ValidationError";
-                //        //if (metadata.ModelType == typeof(int) || metadata.ModelType == typeof(long))
-                //        //else
-                //        //    validator.ErrorMessageResourceName = "ValidationDefault_FloatRange";
-                //    }
-                //    break;
-                //case StringLengthAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        StringLengthAttribute StrLenAttr = validator as StringLengthAttribute;
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        if (StrLenAttr.MinimumLength > 0)
-                //            validator.ErrorMessageResourceName = "StringLengthAttribute_ValidationErrorIncludingMinimum";
-                //        else
-                //            validator.ErrorMessageResourceName = "StringLengthAttribute_ValidationError";
-                //    }
-                //    break;
-                //case EmailAddressAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "EmailAddressAttribute_Invalid";
-                //    }
-                //    break;
-                //case RegularExpressionAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RegexAttribute_ValidationError";
-                //    }
-                //    break;
-                //case System.ComponentModel.DataAnnotations.CompareAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        //var CompareAttr = validator as CompareAttribute;
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "CompareAttribute_MustMatch";
-                //    }
-                //    break;
-                //case RemoteAttribute validator:
-                //    if (validator.ErrorMessageResourceType != typeof(CommonLanguage.Language))
-                //    {
-                //        //var RemoteAttr = validator as System.Web.Mvc.RemoteAttribute;
-                //        validator.ErrorMessageResourceType = typeof(CommonLanguage.Language);
-                //        validator.ErrorMessageResourceName = "RemoteAttribute_NoUrlFound";
-                //    }
-                //    break;
-
-                #endregion
                 case RequiredAttribute attr:
                     if (needResourceSet)
                         attr.ErrorMessageResourceName = "RequiredAttribute_ValidationError";

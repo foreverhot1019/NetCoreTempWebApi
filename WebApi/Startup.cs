@@ -46,6 +46,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
+using LocalizerCustomValidation;
 
 namespace NetCoreTemp.WebApi
 {
@@ -61,49 +62,6 @@ namespace NetCoreTemp.WebApi
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebEnv { get; }
-
-        /// <summary>
-        /// 国际化配置
-        /// </summary>
-        Action<RequestLocalizationOptions> actLocalizationOpts = new Action<RequestLocalizationOptions>(options =>
-        {
-            var supportedCultures = new List<CultureInfo>
-            {
-                new CultureInfo("zh-cn"),
-                new CultureInfo("en-US"),
-                new CultureInfo("zh-tw"),
-                new CultureInfo("ja-jp")
-            };
-
-            options.DefaultRequestCulture = new RequestCulture(culture: supportedCultures[0], uiCulture: supportedCultures[0]);
-            options.SupportedCultures = supportedCultures;
-            options.SupportedUICultures = supportedCultures;
-            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
-            {
-                var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
-
-                if (!string.IsNullOrEmpty(lang))
-                {
-                    var culture = new CultureInfo(lang);
-                    if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
-                    {
-                        //默认读取 accept-language
-                        var result = new ProviderCultureResult(culture.Name);
-                        // My custom request culture logic
-                        return new ProviderCultureResult(lang);
-                    }
-                }
-                return null;
-            }));
-            #region 设置 国际化 Cookie 名称 CookieName=c=ja-jp|uic= 格式 必须是 c={culture}|uic={culture}
-
-            // Find the cookie provider with LINQ
-            var cookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().First();
-            // Set the new cookie name
-            cookieProvider.CookieName = "FinchCulture";
-
-            #endregion
-        });
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -127,28 +85,20 @@ namespace NetCoreTemp.WebApi
                 {
                     opts.DataAnnotationLocalizerProvider = (type, factory) =>
                     {
-                        //var asm = Assembly.GetExecutingAssembly();
-                        if (type.BaseType == typeof(Models.BaseModel.BaseEntity))
+                        Type _type = typeof(CommonLanguage.Language);
+                        var asm = type.Assembly;
+                        if (type.BaseType == typeof(Models.BaseModel.BaseEntity) || type.BaseType == typeof(Models.BaseModel._BaseEntityDto))
                         {
-                            //var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "Models.");
-                            //var restype = Assembly.GetExecutingAssembly().GetType(typename);
-
-                            return factory.Create(typeof(Resources.Models.User));
+                            var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "NetCoreTemp.WebApi.Models.Resources.");
+                            var _rtype = asm.GetType(typename);
+                            if (_rtype != null)
+                                _type = _rtype;
                         }
-                        else if (type.BaseType == typeof(Models.BaseModel._BaseEntityDto))
+                        if (type.Name.IndexOf("Controller") >= 0)
                         {
-                            var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "Models.");
-                            var restype = Assembly.GetExecutingAssembly().GetType(typename);
-
-                            return factory.Create(typename, "Resources");
+                            _type = typeof(CommonLanguage.MVCLang.MvcResources);
                         }
-                        else
-                         if (type.Name.IndexOf("controller") >= 0)
-                        {
-                            return factory.Create(typeof(CommonLanguage.MVCLang.MvcResources));
-                        }
-                        else
-                            return factory.Create(typeof(Resources.MyLang));
+                        return factory.Create(_type);
                     };
                 }); //不要重写 DataAnnotationLocalizerProvider，否则需要自己管理 资源文件
             //.AddJsonOptions(opts =>
@@ -347,23 +297,26 @@ namespace NetCoreTemp.WebApi
 
             #region 自定义验证器
 
-            IServiceProvider serviceProvider = null;
-            services.AddSingleton<IModelValidatorProvider, MyModelValidatorProvider>(sp =>
-            {
-                serviceProvider = sp;
-                var memoryCache = sp.GetService<IMemoryCache>();
-                var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
-                var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizerFactory>();
-                return new MyModelValidatorProvider(memoryCache, stringLocalizer, sharedLocalizer);
-            });
+            //合并到类库
+            services.AddMyModelValidatorProvider();
 
-            services.Configure<MvcOptions>(opts =>
-            {
-                var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
-                var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
-                opts.ModelValidatorProviders.Clear();
-                opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
-            });
+            //IServiceProvider serviceProvider = null;
+            //services.AddSingleton<IModelValidatorProvider, MyModelValidatorProvider>(sp =>
+            //{
+            //    serviceProvider = sp;
+            //    var memoryCache = sp.GetService<IMemoryCache>();
+            //    var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
+            //    var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizerFactory>();
+            //    return new MyModelValidatorProvider(memoryCache, stringLocalizer, sharedLocalizer);
+            //});
+
+            //services.Configure<MvcOptions>(opts =>
+            //{
+            //    var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
+            //    //var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
+            //    //opts.ModelValidatorProviders.Clear();
+            //    opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
+            //});
 
             #endregion
 
@@ -373,7 +326,7 @@ namespace NetCoreTemp.WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             //为了 实现ConfigServices里的 serviceProvider的实例
-            serviceProvider.GetRequiredService<IModelValidatorProvider>();
+            serviceProvider.GetService<IModelValidatorProvider>();
 
             if (env.IsDevelopment())
             {
@@ -460,5 +413,49 @@ namespace NetCoreTemp.WebApi
                 endpoints.MapControllers();
             });
         }
+
+        /// <summary>
+        /// 国际化配置
+        /// </summary>
+        Action<RequestLocalizationOptions> actLocalizationOpts = new Action<RequestLocalizationOptions>(options =>
+        {
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("zh-cn"),
+                new CultureInfo("en-US"),
+                new CultureInfo("zh-tw"),
+                new CultureInfo("ja-jp")
+            };
+
+            options.DefaultRequestCulture = new RequestCulture(culture: supportedCultures[0], uiCulture: supportedCultures[0]);
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(async context =>
+            {
+                var lang = context.Request.Headers["Content-Language"].FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(lang))
+                {
+                    var culture = new CultureInfo(lang);
+                    if (culture != null && supportedCultures.Any(x => x.Equals(culture)))
+                    {
+                        //默认读取 accept-language
+                        var result = new ProviderCultureResult(culture.Name);
+                        // My custom request culture logic
+                        var pvdCultureResult = new ProviderCultureResult(lang);
+                        return pvdCultureResult;
+                    }
+                }
+                return null;
+            }));
+            #region 设置 国际化 Cookie 名称 CookieName=c=ja-jp|uic= 格式 必须是 c={culture}|uic={culture}
+
+            // Find the cookie provider with LINQ
+            var cookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().First();
+            // Set the new cookie name
+            cookieProvider.CookieName = "FinchCulture";
+
+            #endregion
+        });
     }
 }

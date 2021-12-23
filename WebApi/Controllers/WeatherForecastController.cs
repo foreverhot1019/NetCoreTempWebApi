@@ -61,7 +61,7 @@ namespace NetCoreTemp.WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Get([FromServices]IStringLocalizer<Resources.Models.User> stringLocalizer)
+        public async Task<IActionResult> Get()
         {
             var rng = new Random();
             var Arr = await Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -142,7 +142,6 @@ namespace NetCoreTemp.WebApi.Controllers
             };
 
             //var tf = await TryUpdateModelAsync<User>(user);
-            var ss = stringLocalizer.GetString("Test");
 
             var culture = System.Globalization.CultureInfo.CurrentCulture;
             var uiculture = System.Globalization.CultureInfo.CurrentUICulture;

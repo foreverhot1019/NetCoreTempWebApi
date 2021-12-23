@@ -31,7 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Language\CommonLanguage.csproj" />
+    <ProjectReference Include="..\CommonLanguage\CommonLanguage.csproj" />
+    <ProjectReference Include="..\CustomValidation\LocalizerCustomValidation.csproj" />
     <ProjectReference Include="..\Model\NetCoreTemp.WebApi.Models.csproj" />
     <ProjectReference Include="..\RedisHelp\RedisHelp.csproj" />
     <ProjectReference Include="..\Services\NetCoreTemp.WebApi.Services.csproj" />
@@ -51,7 +52,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Resources\Models\AutoMapper\" />
   </ItemGroup>
 
 
