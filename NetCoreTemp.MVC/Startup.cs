@@ -34,7 +34,6 @@ namespace NetCoreTemp.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLocalization(x => x.ResourcesPath = "Resources");
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
                 .AddDataAnnotationsLocalization(); //不要重写 DataAnnotationLocalizerProvider，否则需要自己管理 资源文件
@@ -45,26 +44,14 @@ namespace NetCoreTemp.MVC
             //合并到类库
             services.AddMyModelValidatorProvider();
 
-            //IServiceProvider serviceProvider = null;
-            //services.AddSingleton<IModelValidatorProvider, MyModelValidatorProvider>(sp =>
-            //{
-            //    serviceProvider = sp;
-            //    var memoryCache = sp.GetService<IMemoryCache>();
-            //    var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer>();
-            //    var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
-            //    return new MyModelValidatorProvider(memoryCache, stringLocalizer, sharedLocalizer);
-            //});
+            #endregion
 
-            //services.Configure<MvcOptions>(opts =>
-            //{
-            //    var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
-            //    var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
-            //    opts.ModelValidatorProviders.Clear();
-            //    opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
-            //});
+            #region 国际化
+
+            services.AddLocalization(x => x.ResourcesPath = "Resources");
+            services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
 
             #endregion
-            services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

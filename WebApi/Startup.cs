@@ -66,41 +66,33 @@ namespace NetCoreTemp.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region 国际化
-
-            services.AddLocalization();
-            services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
-
-            #endregion
             services.AddControllers(opts =>
             {
                 opts.Filters.Add<ApiBaseExceptionFilter>();//全局异常处理
                 opts.Filters.Add<ApiBaseAuthorizeFilter>();//全局权限认证
                 opts.Filters.Add<ApiBaseActionFilter>();//全局Action统一格式返回
                 //opts.ModelValidatorProviders.Add(new MyModelValidatorProvider());
-            })
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
-                                                                                //.AddDataAnnotationsLocalization();
-                .AddDataAnnotationsLocalization(opts =>
+            }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
+            .AddDataAnnotationsLocalization(opts =>
+            {
+                opts.DataAnnotationLocalizerProvider = (type, factory) =>
                 {
-                    opts.DataAnnotationLocalizerProvider = (type, factory) =>
+                    Type _type = typeof(CommonLanguage.Language);
+                    var asm = type.Assembly;
+                    if (type.BaseType == typeof(Models.BaseModel.BaseEntity) || type.BaseType == typeof(Models.BaseModel._BaseEntityDto))
                     {
-                        Type _type = typeof(CommonLanguage.Language);
-                        var asm = type.Assembly;
-                        if (type.BaseType == typeof(Models.BaseModel.BaseEntity) || type.BaseType == typeof(Models.BaseModel._BaseEntityDto))
-                        {
-                            var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "NetCoreTemp.WebApi.Models.Resources.");
-                            var _rtype = asm.GetType(typename);
-                            if (_rtype != null)
-                                _type = _rtype;
-                        }
-                        if (type.Name.IndexOf("Controller") >= 0)
-                        {
-                            _type = typeof(CommonLanguage.MVCLang.MvcResources);
-                        }
-                        return factory.Create(_type);
-                    };
-                }); //不要重写 DataAnnotationLocalizerProvider，否则需要自己管理 资源文件
+                        var typename = type.FullName.Replace("NetCoreTemp.WebApi.Models.", "NetCoreTemp.WebApi.Models.Resources.");
+                        var _rtype = asm.GetType(typename);
+                        if (_rtype != null)
+                            _type = _rtype;
+                    }
+                    if (type.Name.IndexOf("Controller") >= 0)
+                    {
+                        _type = typeof(CommonLanguage.MVCLang.MvcResources);
+                    }
+                    return factory.Create(_type);
+                };
+            }); //不要重写 DataAnnotationLocalizerProvider，否则需要自己管理 资源文件
             //.AddJsonOptions(opts =>
             //{
             //    //驼峰
@@ -300,23 +292,12 @@ namespace NetCoreTemp.WebApi
             //合并到类库
             services.AddMyModelValidatorProvider();
 
-            //IServiceProvider serviceProvider = null;
-            //services.AddSingleton<IModelValidatorProvider, MyModelValidatorProvider>(sp =>
-            //{
-            //    serviceProvider = sp;
-            //    var memoryCache = sp.GetService<IMemoryCache>();
-            //    var stringLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizer<CommonLanguage.Language>>();
-            //    var sharedLocalizer = sp.GetService<Microsoft.Extensions.Localization.IStringLocalizerFactory>();
-            //    return new MyModelValidatorProvider(memoryCache, stringLocalizer, sharedLocalizer);
-            //});
+            #endregion
 
-            //services.Configure<MvcOptions>(opts =>
-            //{
-            //    var Arr = serviceProvider?.GetServices<IModelValidatorProvider>();
-            //    //var defaultProviders = opts.ModelValidatorProviders.OfType<IModelValidatorProvider>();
-            //    //opts.ModelValidatorProviders.Clear();
-            //    opts.ModelValidatorProviders.Add(Arr?.FirstOrDefault());
-            //});
+            #region 国际化
+
+            services.AddLocalization();
+            services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
 
             #endregion
 

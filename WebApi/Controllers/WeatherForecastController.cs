@@ -70,7 +70,7 @@ namespace NetCoreTemp.WebApi.Controllers
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
-            .ToArray());
+            .ToList());
 
             #region autoMapper测试
 
@@ -136,7 +136,7 @@ namespace NetCoreTemp.WebApi.Controllers
             {
                 Name = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
                 Roles = "1,2,3",
-                Email="aqqqqq.com",
+                Email = "aqqqqq.com",
                 CreateUserId = Guid.Empty,
                 ModifyUserId = Guid.Empty
             };
@@ -148,17 +148,16 @@ namespace NetCoreTemp.WebApi.Controllers
             ModelState.Clear();
             TryValidateModel(user);
             var s = ModelState.IsValid;
-            var ArrUser = _dbContext.User.ToList();
-
-            //var c_val = Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.MakeCookieValue(new Microsoft.AspNetCore.Localization.RequestCulture(culture));
-            //Response.Cookies.Append(
-            //    "FinchCulture",
-            //    c_val,
-            //    new Microsoft.AspNetCore.Http.CookieOptions
-            //    {
-            //        Expires = DateTimeOffset.UtcNow.AddYears(1),
-            //        SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-            //    });
+            if (!s)
+            {
+                var errs = ModelState.Select(x => x.Key + ":" + string.Join(" . ", x.Value?.Errors.Select((n, i) => $" {i + 1}. {n.ErrorMessage}").ToArray()));
+                Arr.Add(new WeatherForecast
+                {
+                    Date = DateTime.Now,
+                    Summary = string.Join(";", errs),
+                    TemperatureC = 1
+                });
+            }
 
             return Ok(Arr);
         }
