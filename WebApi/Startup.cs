@@ -122,11 +122,12 @@ namespace NetCoreTemp.WebApi
             //注入IOption<JwtOption>
             services.Configure<JwtOption>(Configuration.GetSection("JWT"));
             //注册EF上下文
-            services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(Environment.ExpandEnvironmentVariables(Configuration.GetConnectionString("DefaultConnection")), sqldbBuilder =>
+            var dbConnStr = Environment.ExpandEnvironmentVariables(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(dbConnStr, sqldbBuilder =>
             {
                 sqldbBuilder.CommandTimeout(500);
                 sqldbBuilder.MigrationsAssembly("NetCoreTemp.WebApi");
-            }));
+            })); ;
             //增加AutoMapper
             services.AddAutoMapperService();
             //注入scope-自定义Service
@@ -276,10 +277,10 @@ namespace NetCoreTemp.WebApi
 
             #region QuartzJobScheduler
 
-            //1.自动IJobFactory使用MicrosoftDependencyInjectionJobFactory包实现
+            ////1.自动IJobFactory使用MicrosoftDependencyInjectionJobFactory包实现
             //services.AddQuartzSchedulerServiceAuto();
 
-            //2.手动实现IJobFactory（必须将IJob先注入DI）
+            ////2.手动实现IJobFactory（必须将IJob先注入DI）
             //services.AddQuartzSchedulerService();
 
             #endregion

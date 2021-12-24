@@ -2,15 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>5</WarningLevel>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Content Include="Quartz\quartz_jobs.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Certificate\MServer.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
 
@@ -37,19 +42,18 @@
     <ProjectReference Include="..\RedisHelp\RedisHelp.csproj" />
     <ProjectReference Include="..\Services\NetCoreTemp.WebApi.Services.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
+    <Content Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
+    </Content>
     <Content Update="quartz.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Certificate\MServer.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
+  
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>

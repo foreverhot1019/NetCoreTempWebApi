@@ -158,6 +158,7 @@ namespace NetCoreTemp.WebApi.Controllers
                     TemperatureC = 1
                 });
             }
+            _dbContext.User.ToList();
 
             return Ok(Arr);
         }
