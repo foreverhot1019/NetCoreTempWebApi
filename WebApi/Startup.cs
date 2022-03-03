@@ -47,6 +47,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using LocalizerCustomValidation;
+using AspectCore.Extensions.DependencyInjection;
+using AspectCore.Configuration;
 
 namespace NetCoreTemp.WebApi
 {
@@ -311,6 +313,50 @@ namespace NetCoreTemp.WebApi
 
             services.AddLocalization();
             services.Configure<RequestLocalizationOptions>(actLocalizationOpts);
+
+            #endregion
+
+            #region AspectCore AOP 拦截器
+
+            /*
+             * AspectCore AOP 属性注入,执行时间日志
+             * 不是全局注入 无需依赖注入
+            */
+            //services.AddTransient<AOPLogAttribute>();
+            //services.ConfigureDynamicProxy();
+
+            /*
+             * 注册全局拦截器
+             */
+            //services.ConfigureDynamicProxy(config =>
+            //{
+            //    /*
+            //     * 不注册全局拦截器
+            //     * NonAspectAttribute 来使得Service或Method不被代理
+            //     */
+            //    //全局拦截器（特定服务）
+            //    config.Interceptors.AddTyped<AOPLogAttribute>(Predicates.ForService("*Service"));
+            //    //全局拦截器（Params结尾的方法）
+            //    config.Interceptors.AddTyped<AOPLogAttribute>(method => method.Name.EndsWith("Params"));
+
+            //    //App1命名空间下的Service不会被代理
+            //    config.NonAspectPredicates.AddNamespace("BI.CPA.Core");
+
+            //    //最后一级为App1的命名空间下的Service不会被代理
+            //    config.NonAspectPredicates.AddNamespace("*.Entities");
+
+            //    //ICustomService接口不会被代理
+            //    config.NonAspectPredicates.AddService("ICustomService");
+
+            //    //后缀为Service的接口和类不会被代理
+            //    config.NonAspectPredicates.AddService("*Service");
+
+            //    //命名为Query的方法不会被代理
+            //    config.NonAspectPredicates.AddMethod("Query");
+
+            //    //后缀为Query的方法不会被代理
+            //    config.NonAspectPredicates.AddMethod("*Query");
+            //});
 
             #endregion
 
