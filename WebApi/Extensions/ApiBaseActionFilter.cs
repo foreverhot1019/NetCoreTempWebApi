@@ -106,13 +106,16 @@ namespace NetCoreTemp.WebApi.Extensions
                 }
                 else
                 {
-                    context.Result = new JsonResult(new ActionReturnMessage
+                    if (!(context.Result is FileResult))
                     {
-                        StatusCode = (HttpStatusCode)context.HttpContext.Response.StatusCode,
-                        ErrMessage = "",
-                        IsSuccess = true,
-                        Data = null
-                    });
+                        context.Result = new JsonResult(new ActionReturnMessage
+                        {
+                            StatusCode = (HttpStatusCode)context.HttpContext.Response.StatusCode,
+                            ErrMessage = "",
+                            IsSuccess = true,
+                            Data = null
+                        });
+                    }
                 }
             }
             return base.OnResultExecutionAsync(context, next);

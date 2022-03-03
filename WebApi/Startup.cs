@@ -173,6 +173,8 @@ namespace NetCoreTemp.WebApi
                         var error = context.Exception;
                         context.Response.StatusCode = 401;
                         context.Response.ContentType = "application/json";
+                        //跨域时，设置WithExposedHeaders，否则无法读取到数据
+                        context.Response.Headers.Add("x-token-failed", "true");
 
                         var actResultMsg = new ActionReturnMessage
                         {
@@ -226,7 +228,7 @@ namespace NetCoreTemp.WebApi
             //跨域
             services.AddCors(options =>
             {
-                options.AddPolicy("localhost", policy =>
+                options.AddPolicy("CorsPolicy", policy =>
                 {
                     var http = Configuration.GetValue<string>("Kestrel.Endpoints.Http") ?? "http://localhost:5000";
                     var tls = Configuration.GetValue<string>("Kestrel.Endpoints.Https") ?? "https://localhost:5001";
@@ -235,7 +237,17 @@ namespace NetCoreTemp.WebApi
                         "http://localhost:9527",
                         http,
                         tls
-                    }).AllowAnyHeader().AllowAnyMethod();
+                    }).AllowAnyHeader().AllowAnyMethod()
+                    /* 浏览器默认响应头
+                     * Cache-Control
+                     * Content-Language
+                     * Content-Type
+                     * Expires
+                     * Last-Modified
+                     * Pragma
+                    */
+                    .WithExposedHeaders("x-token-failed", "Content-Disposition", "server-login")
+                    .AllowCredentials();
                 });
             });
             services.AddMemoryCache();
@@ -256,7 +268,7 @@ namespace NetCoreTemp.WebApi
 
             #endregion
 
-            #region Polly
+            #region HttpClientFactory
 
             //不验证 SSL证书
             System.Net.Http.HttpClientHandler clientHandler = new System.Net.Http.HttpClientHandler();
@@ -318,7 +330,7 @@ namespace NetCoreTemp.WebApi
             //app.UseHttpsRedirection();
 
             //跨域
-            app.UseCors("localhost");
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseCookiePolicy();
 
