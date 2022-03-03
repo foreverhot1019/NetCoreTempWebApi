@@ -76,26 +76,26 @@ namespace NetCoreTemp.WebApi.Controllers
             filterRules = filterRules ?? new List<filterRule>();
             if (!filterRules.Any(x => x.field == "Status"))
             {
-                filterRules.Add(new filterRule { field = "Status", op = (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
+                filterRules.Add(new filterRule { field = "Status", op = Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
             }
             if (!filterRules.Any(x => x.field == "Type"))
             {
-                filterRules.Add(new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Role#" });
+                filterRules.Add(new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Role#" });
             }
             IEnumerable<Role> ArrRole = new List<Role>();
             long rowsCount = 0;
             string _paginationToken = "";
             (ArrRole, rowsCount) = _roleService.QueryByFilterRules(filterRules).SelectPage(page, limit);
             var roleMunuFilters = new List<filterRule> {
-                new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
+                new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
             };
             if (ArrRole?.Any() == true)
-                roleMunuFilters.Add(new filterRule { field = "RoleId", op = (int)Models.EnumType.EnumRepo.FilterOp.In, value = string.Join(",", ArrRole.Select(x => x.ID)) });
+                roleMunuFilters.Add(new filterRule { field = "RoleId", op = Models.EnumType.EnumRepo.FilterOp.In, value = string.Join(",", ArrRole.Select(x => x.ID)) });
             IEnumerable<RoleMenu> ArrRoleMenu = new List<RoleMenu>();
             ArrRoleMenu = await _roleMenuService.QueryByFilterRules(roleMunuFilters).ToListAsync();
             //ArrRoleMenu = tmp.ArrTEntity;
             var menuFilters = new List<filterRule> {
-                new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" }
+                new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" }
             };
 
             var ArrMenu = await _menuService.QueryByFilterRules(menuFilters).ToListAsync();
@@ -256,8 +256,8 @@ namespace NetCoreTemp.WebApi.Controllers
         {
             var roles = await _roleService.QueryByFilterRules(new List<filterRule>
             {
-                new filterRule{  field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
-                new filterRule{  field="ID", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = id}
+                new filterRule{  field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
+                new filterRule{  field="ID", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = id}
             }).ToListAsync();
             if (roles.Any())
             {
@@ -287,9 +287,9 @@ namespace NetCoreTemp.WebApi.Controllers
             {
                 var roleMenufilter = new List<filterRule>
                 {
-                    new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
-                    new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" },
-                    new filterRule{ field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID.ToString() }
+                    new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
+                    new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" },
+                    new filterRule{ field="RoleId", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID.ToString() }
                 };
                 var roleMenus = await _roleMenuService.QueryByFilterRules(roleMenufilter).ToListAsync();
 
@@ -348,7 +348,7 @@ namespace NetCoreTemp.WebApi.Controllers
         {
             var roles = await _roleService.QueryByFilterRules(new List<filterRule>
             {
-                new filterRule{  field="ID", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = id}
+                new filterRule{  field="ID", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = id}
             }).ToListAsync();
             if (roles.Any())
             {
@@ -358,8 +358,8 @@ namespace NetCoreTemp.WebApi.Controllers
                     var roleMenufilter = new List<filterRule>
                     {
                         //new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" },
-                        new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
-                        new filterRule{ field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID.ToString() }
+                        new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
+                        new filterRule{ field="RoleId", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = role.ID.ToString() }
                     };
                     var roleMenus = await _roleMenuService.QueryByFilterRules(roleMenufilter).ToListAsync();
                     if (roleMenus.Any())
@@ -394,9 +394,9 @@ namespace NetCoreTemp.WebApi.Controllers
         {
             var roleMenus = await _roleMenuService.QueryByFilterRules(new List<filterRule>
             {
-                new filterRule{  field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
-                new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
-                new filterRule{  field="RoleId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = RoleId}
+                new filterRule{  field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
+                new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "RoleMenu#" },
+                new filterRule{  field="RoleId", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = RoleId}
             }).ToListAsync();
             if (roleMenus.Any())
             {

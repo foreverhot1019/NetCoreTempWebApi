@@ -51,16 +51,16 @@ namespace NetCoreTemp.WebApi.Controllers
             if (filterRules == null)
             {
                 filterRules = new List<filterRule> {
-                    new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number }
+                    new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number }
                 };
             }
             if (!filterRules.Any(x => x.field == "Status"))
             {
-                filterRules.Add(new filterRule { field = "Status", op = (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
+                filterRules.Add(new filterRule { field = "Status", op = Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
             }
             if (!filterRules.Any(x => x.field == "Type"))
             {
-                filterRules.Add(new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Menu#" });
+                filterRules.Add(new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Menu#" });
             }
             IEnumerable<Menu> ArrMenu;
             long rowsCount;
@@ -124,7 +124,7 @@ namespace NetCoreTemp.WebApi.Controllers
         {
             var menus = await _menuService.QueryByFilterRules(new List<filterRule>
             {
-                new filterRule{  field="ID", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = id}
+                new filterRule{  field="ID", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = id}
             }).ToListAsync();
             if (menus.Any())
             {
@@ -150,20 +150,20 @@ namespace NetCoreTemp.WebApi.Controllers
             if (filters == null)
             {
                 filters = new List<filterRule> {
-                    new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number }
+                    new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number }
                 };
             }
             if (!filters.Any(x => x.field == "Status"))
             {
-                filters.Add(new filterRule { field = "Status", op = (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
+                filters.Add(new filterRule { field = "Status", op = Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
             }
             if (!filters.Any(x => x.field == "Type"))
             {
-                filters.Add(new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Menu#" });
+                filters.Add(new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Menu#" });
             }
 
             if (!string.IsNullOrWhiteSpace(searchKey))
-                filters.Add(new filterRule { field = "Name", op = (int)Models.EnumType.EnumRepo.FilterOp.Contains, value = searchKey });
+                filters.Add(new filterRule { field = "Name", op = Models.EnumType.EnumRepo.FilterOp.Contains, value = searchKey });
             var menus = await _menuService.QueryByFilterRules(filters).ToListAsync();
             return Ok(menus.Select(x => new
             {
@@ -182,8 +182,8 @@ namespace NetCoreTemp.WebApi.Controllers
         public async Task<IActionResult> getMenuTree(string ParentMenuId)
         {
             var filters = new List<filterRule>{
-                new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
-                new filterRule { field = "ID", op = (int)Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Menu#" }
+                new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType= Models.EnumType.EnumRepo.FilterValueType.Number },
+                new filterRule { field = "ID", op = Models.EnumType.EnumRepo.FilterOp.BeginsWith, value = "Menu#" }
             };
             if (string.IsNullOrWhiteSpace(ParentMenuId))
             {

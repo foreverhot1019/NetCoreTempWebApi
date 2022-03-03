@@ -65,12 +65,12 @@ namespace NetCoreTemp.WebApi.Controllers
             if (filterRules == null)
             {
                 filterRules = new List<filterRule> {
-                    new filterRule{ field="Status", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" , valType= Models.EnumType.EnumRepo.FilterValueType.Number}
+                    new filterRule{ field="Status", op= Models.EnumType.EnumRepo.FilterOp.Equal, value = "1" , valType= Models.EnumType.EnumRepo.FilterValueType.Number}
                 };
             }
             if (!filterRules.Any(x => x.field == "Status"))
             {
-                filterRules.Add(new filterRule { field = "Status", op = (int)Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
+                filterRules.Add(new filterRule { field = "Status", op = Models.EnumType.EnumRepo.FilterOp.Equal, value = "1", valType = Models.EnumType.EnumRepo.FilterValueType.Number });
             }
             var name = User.Identity.Name;
             var role = User.IsInRole("admin");
@@ -91,7 +91,7 @@ namespace NetCoreTemp.WebApi.Controllers
             if (rangkey == null || rangkey <= 0)
             {
                 var users = await _userService.QueryByFilterRules(new List<filterRule> {
-                    new filterRule{  field="ID",op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value=id}
+                    new filterRule{  field="ID",op= Models.EnumType.EnumRepo.FilterOp.Equal, value=id}
                 }).ToListAsync();
                 if (users.Any())
                 {
@@ -113,7 +113,7 @@ namespace NetCoreTemp.WebApi.Controllers
             if (userDto._Roles != null && userDto._Roles.Any())
             {
                 var roles = await _roleService.QueryByFilterRules(new List<filterRule> {
-                    new filterRule { field="Name", op= (int)Models.EnumType.EnumRepo.FilterOp.In, value= user.Roles}
+                    new filterRule { field="Name", op= Models.EnumType.EnumRepo.FilterOp.In, value= user.Roles}
                 }).ToListAsync();
                 foreach (var role in roles)
                 {
@@ -140,7 +140,7 @@ namespace NetCoreTemp.WebApi.Controllers
         private async Task DeleteUserRole(string userId)
         {
             var userRoles = await _userRoleService.QueryByFilterRules(new List<filterRule> {
-                new filterRule { field="UserId", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value= userId}
+                new filterRule { field="UserId", op= Models.EnumType.EnumRepo.FilterOp.Equal, value= userId}
             }).ToListAsync();
             if (userRoles.Any())
             {
@@ -168,7 +168,7 @@ namespace NetCoreTemp.WebApi.Controllers
                 if (userDto._Roles.Any())
                 {
                     var roles = await _roleService.QueryByFilterRules(new List<filterRule> {
-                        new filterRule { field="Name", op= (int)Models.EnumType.EnumRepo.FilterOp.In, value= user.Roles}
+                        new filterRule { field="Name", op= Models.EnumType.EnumRepo.FilterOp.In, value= user.Roles}
                     }).ToListAsync();
 
                     await DeleteUserRole(user.ID.ToString());
@@ -196,7 +196,7 @@ namespace NetCoreTemp.WebApi.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var users = await _userService.QueryByFilterRules(new List<filterRule> {
-                new filterRule { field="ID", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value= id}
+                new filterRule { field="ID", op= Models.EnumType.EnumRepo.FilterOp.Equal, value= id}
             }).ToListAsync();
             if (users.Any())
             {
@@ -230,8 +230,8 @@ namespace NetCoreTemp.WebApi.Controllers
             //    token = "admin-token";
             //}
             var ArrUser = await _userService.QueryByFilterRules((new List<filterRule> {
-                new filterRule {  field= "Name", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value= username },
-                new filterRule {  field= "Password", op= (int)Models.EnumType.EnumRepo.FilterOp.Equal, value= password }
+                new filterRule {  field= "Name", op= Models.EnumType.EnumRepo.FilterOp.Equal, value= username },
+                new filterRule {  field= "Password", op= Models.EnumType.EnumRepo.FilterOp.Equal, value= password }
             })).ToListAsync();
             if (!ArrUser.Any() || ArrUser.Count() > 1)
             {

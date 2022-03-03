@@ -16,7 +16,7 @@ namespace NetCoreTemp.WebApi.Models.View_Model
         public string field { get; set; }
 
         [Display(Name = "比较符号", Description = "比较符号")]
-        public int op { get; set; }//FilterOp
+        public FilterOp op { get; set; }//FilterOp
 
         [Display(Name = "值", Description = "值")]
         public string value { get; set; }
