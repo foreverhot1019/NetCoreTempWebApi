@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using AutoMapper;
 using NetCoreTemp.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.Entity;
 using NetCoreTemp.WebApi.Models.Extensions;
 
 namespace NetCoreTemp.WebApi.Models.AutoMapper

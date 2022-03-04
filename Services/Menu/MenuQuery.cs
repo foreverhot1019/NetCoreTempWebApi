@@ -1,4 +1,4 @@
-﻿using NetCoreTemp.WebApi.Models;
+﻿using NetCoreTemp.WebApi.Models.Entity;
 using NetCoreTemp.WebApi.Models.Extensions;
 using NetCoreTemp.WebApi.Models.View_Model;
 using NetCoreTemp.WebApi.Services.Base;

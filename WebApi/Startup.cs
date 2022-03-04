@@ -360,19 +360,26 @@ namespace NetCoreTemp.WebApi
 
             #endregion
 
+            services.AddLogging(config => {
+                config.AddLog4Net();
+            });
+            ////注册静态依赖注入实例,以便Fody和其他地方使用
+            //FodyGetService.Configration(services.BuildServiceProvider());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            IServiceProvider serviceProvider = app.ApplicationServices;
             //为了 实现ConfigServices里的 serviceProvider的实例
             serviceProvider.GetService<IModelValidatorProvider>();
+            Services.FodyTest.FodyGetService.Configration(serviceProvider);
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            loggerFactory.AddLog4Net();
             //app.UseHttpsRedirection();
 
             //跨域

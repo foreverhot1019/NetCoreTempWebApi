@@ -11,9 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Anotar.Log4Net.Fody" Version="5.1.2" />
     <PackageReference Include="AspectCore.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Ionad.Fody" Version="2.2.0" />
     <PackageReference Include="LinqKit.Core" Version="1.1.27" />
+    <PackageReference Include="MethodDecorator.Fody" Version="1.1.1" />
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>

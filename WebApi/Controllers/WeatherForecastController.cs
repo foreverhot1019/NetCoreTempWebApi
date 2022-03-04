@@ -1,21 +1,21 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
-using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using NetCoreTemp.WebApi.QuartzJobScheduler;
 using Microsoft.Extensions.DependencyInjection;
-using NetCoreTemp.WebApi.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NetCoreTemp.WebApi.QuartzJobScheduler;
 using NetCoreTemp.WebApi.Models.AutoMapper;
-using AutoMapper;
+using NetCoreTemp.WebApi.Models.Entity;
+using NetCoreTemp.WebApi.Models.View_Model;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
 using NetCoreTemp.WebApi.Services;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Localization;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
@@ -37,7 +37,6 @@ namespace NetCoreTemp.WebApi.Controllers
         private readonly AppDbContext _dbContext;
         private readonly RoleService _roleService;
 
-
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
             RedisHelp.RedisHelper redisHelper,
             IServiceProvider serviceProvider)
@@ -57,12 +56,63 @@ namespace NetCoreTemp.WebApi.Controllers
 
             ////测试 订阅key过期事件
             //_redisHelper.SubscribeKeyExpire();
+
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
+            _logger.LogInformation("开始测试");
+
+            #region Fody测试
+
+            Services.FodyTest.SampleA sample = new Services.FodyTest.SampleA
+            {
+                A = "A",
+                AA = "AA",
+                B = 1,
+                BB = 2,
+                C = 1.123m,
+                CC = 1.223m,
+                D = true,
+                DD = false
+            }; 
+            sample.PropertyChanged += (obj, args) =>
+            {
+                _logger.LogInformation("sample.PropertyChanged:{0}", args.PropertyName);
+            };
+            sample.A += "_";
+            sample.B += 10;
+            sample.C += 10.999m;
+            sample.D = false;
+            sample.MethodA();
+            sample.MethodTime("TTTTTime");
+
+            Services.FodyTest.SampleB sampleB = new Services.FodyTest.SampleB
+            {
+                A = "B",
+                AA = "BB",
+                B = 2,
+                BB = 22,
+                C = 2.123m,
+                CC = 2.223m,
+                D = true,
+                DD = false
+            };
+            sampleB.PropertyChanged += (obj, args) =>
+            {
+                _logger.LogInformation("sample.PropertyChanged:{0}", args.PropertyName);
+            };
+            sampleB.A += "_";
+            sampleB.B += 20;
+            sampleB.C += 20.999m;
+            sampleB.D = false;
+            sampleB.MethodB();
+            sampleB.MethodTimeB("BBBTime");
+
+            #endregion
+
             var rng = new Random();
             var Arr = await Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

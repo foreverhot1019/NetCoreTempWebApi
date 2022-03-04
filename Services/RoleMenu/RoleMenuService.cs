@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.Entity;
 using NetCoreTemp.WebApi.Models.DatabaseContext;
 using NetCoreTemp.WebApi.Models.View_Model;
 using NetCoreTemp.WebApi.Services.Base;

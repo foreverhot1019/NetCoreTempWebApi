@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace NetCoreTemp.WebApi.Models.DatabaseContext

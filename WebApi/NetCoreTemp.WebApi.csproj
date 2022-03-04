@@ -60,6 +60,7 @@
   
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Fody_Test\" />
   </ItemGroup>
 
 

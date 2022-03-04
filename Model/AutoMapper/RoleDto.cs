@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using NetCoreTemp.WebApi.Models.BaseModel;
+using NetCoreTemp.WebApi.Models.Entity;
 using NetCoreTemp.WebApi.Models.EnumType;
 using AutoMapper;
 using NetCoreTemp.WebApi.Models.Extensions;

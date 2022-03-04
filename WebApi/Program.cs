@@ -53,7 +53,6 @@ namespace NetCoreTemp.WebApi
                     //});
                     webBuilder.UseStartup<Startup>().UseWebRoot("wwwroot");
                 })
-            //AsceptCore-AOP
-                .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+                .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());//AsceptCore-AOP
     }
 }

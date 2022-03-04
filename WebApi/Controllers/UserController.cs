@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NetCoreTemp.WebApi.Models;
+using NetCoreTemp.WebApi.Models.Entity;
 using Microsoft.Extensions.Logging;
 using NetCoreTemp.WebApi.Models.AutoMapper;
 using NetCoreTemp.WebApi.Models.View_Model;
