@@ -47,8 +47,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using LocalizerCustomValidation;
-using AspectCore.Extensions.DependencyInjection;
-using AspectCore.Configuration;
 
 namespace NetCoreTemp.WebApi
 {
@@ -319,6 +317,9 @@ namespace NetCoreTemp.WebApi
             #region AspectCore AOP 拦截器
 
             /*
+             * using AspectCore.Extensions.DependencyInjection;
+             * using AspectCore.Configuration;
+             * program  .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());//AsceptCore-AOP
              * AspectCore AOP 属性注入,执行时间日志
              * 不是全局注入 无需依赖注入
             */
@@ -374,7 +375,7 @@ namespace NetCoreTemp.WebApi
             IServiceProvider serviceProvider = app.ApplicationServices;
             //为了 实现ConfigServices里的 serviceProvider的实例
             serviceProvider.GetService<IModelValidatorProvider>();
-            Services.FodyTest.FodyGetService.Configration(serviceProvider);
+            Services.AOP.FodyDIService.Configration(serviceProvider);
 
             if (env.IsDevelopment())
             {

@@ -30,6 +30,7 @@ namespace NetCoreTemp.WebApi.Services
         /// </summary>
         /// <param name="filterRules">搜索条件</param>
         /// <returns></returns>
+        [MyAopLogAttr, FodyLog]
         public async Task<User> getUserRoles(string Id,object rangeKey=null)
         {
             _logger.LogInformation($"getUserRoles-{{Id:\"{Id}\",rangeKey:\"{rangeKey}\"}}");

@@ -15,6 +15,8 @@ using CsvHelper.Configuration;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using MiniExcelLibs;
+using MiniExcelLibs.OpenXml;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.Streaming;
 using NPOI.XSSF.UserModel;
@@ -181,7 +183,7 @@ namespace NetCoreTemp.WebApi.Extensions
         /// <param name="write2OneCsv">写入一个文档</param>
         /// <param name="encoding">编码格式</param>
         /// <returns></returns>
-        public async Task<string> WriteDataTable2CSV(string _tempDir,int _page, bool write2OneCsv = false, Encoding encoding = null)
+        public async Task<string> WriteDataTable2CSV(string _tempDir, int _page, bool write2OneCsv = false, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.GetEncoding("UTF-8");
             var source = new CancellationTokenSource();
@@ -305,6 +307,31 @@ namespace NetCoreTemp.WebApi.Extensions
             await taskMain;
             return filepath;
         }
+
+        /// <summary>
+        /// MiniExcel
+        /// https://toscode.gitee.com/qww.haluan.com/MiniExcel
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> ReadStreamByMiniExcel<T>(Stream stream) where T : class, new()
+        {
+            var config = new OpenXmlConfiguration()
+            {
+                //TableStyles = MiniExcelLibs.OpenXml.TableStyles.None,
+                FillMergedCells = true
+            };
+            //var sheetNames = MiniExcel.GetSheetNames(stream);
+            //var columns = MiniExcel.GetColumns(stream, useHeaderRow: true);
+            var rows = await stream.QueryAsync<T>(excelType: ExcelType.XLSX);
+            //var enu = rows.GetEnumerator();
+            //while (enu.MoveNext())
+            //{
+
+            //}
+            return rows;
+        }
     }
 
     /// <summary>
@@ -367,7 +394,7 @@ namespace NetCoreTemp.WebApi.Extensions
             if (_arrProp == null)
             {
                 _arrProp = _type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                _cache.Set(_type.FullName, _arrProp,new CacheItemPolicy { AbsoluteExpiration= DateTimeOffset.Now.AddHours(8) });
+                _cache.Set(_type.FullName, _arrProp, new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(8) });
             }
             ArrProp = (PropertyInfo[])_arrProp;
         }

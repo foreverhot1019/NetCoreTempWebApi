@@ -36,6 +36,7 @@ namespace NetCoreTemp.WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly AppDbContext _dbContext;
         private readonly RoleService _roleService;
+        UserService _userService;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
             RedisHelp.RedisHelper redisHelper,
@@ -53,6 +54,7 @@ namespace NetCoreTemp.WebApi.Controllers
 
             _dbContext = serviceProvider.GetRequiredService<AppDbContext>();
             _roleService = serviceProvider.GetRequiredService<RoleService>();
+            _userService = serviceProvider.GetRequiredService<UserService>();
 
             ////测试 订阅key过期事件
             //_redisHelper.SubscribeKeyExpire();
@@ -65,51 +67,52 @@ namespace NetCoreTemp.WebApi.Controllers
         {
             _logger.LogInformation("开始测试");
 
-            #region Fody测试
+            #region Fody-MethodDecorator&PropertyChanged测试
 
-            Services.FodyTest.SampleA sample = new Services.FodyTest.SampleA
-            {
-                A = "A",
-                AA = "AA",
-                B = 1,
-                BB = 2,
-                C = 1.123m,
-                CC = 1.223m,
-                D = true,
-                DD = false
-            }; 
-            sample.PropertyChanged += (obj, args) =>
-            {
-                _logger.LogInformation("sample.PropertyChanged:{0}", args.PropertyName);
-            };
-            sample.A += "_";
-            sample.B += 10;
-            sample.C += 10.999m;
-            sample.D = false;
-            sample.MethodA();
-            sample.MethodTime("TTTTTime");
+            await _userService.getUserRoles("0");
+            //Services.SampleA sample = new Services.SampleA
+            //{
+            //    A = "A",
+            //    AA = "AA",
+            //    B = 1,
+            //    BB = 2,
+            //    C = 1.123m,
+            //    CC = 1.223m,
+            //    D = true,
+            //    DD = false
+            //};
+            //sample.PropertyChanged += (obj, args) =>
+            //{
+            //    _logger.LogInformation("sample.PropertyChanged:{0}", args.PropertyName);
+            //};
+            //sample.A += "_";
+            //sample.B += 10;
+            //sample.C += 10.999m;
+            //sample.D = false;
+            //sample.MethodA();
+            //sample.MethodTime("TTTTTime");
 
-            Services.FodyTest.SampleB sampleB = new Services.FodyTest.SampleB
-            {
-                A = "B",
-                AA = "BB",
-                B = 2,
-                BB = 22,
-                C = 2.123m,
-                CC = 2.223m,
-                D = true,
-                DD = false
-            };
-            sampleB.PropertyChanged += (obj, args) =>
-            {
-                _logger.LogInformation("sample.PropertyChanged:{0}", args.PropertyName);
-            };
-            sampleB.A += "_";
-            sampleB.B += 20;
-            sampleB.C += 20.999m;
-            sampleB.D = false;
-            sampleB.MethodB();
-            sampleB.MethodTimeB("BBBTime");
+            //Services.SampleB sampleB = new Services.SampleB
+            //{
+            //    A = "B",
+            //    AA = "BB",
+            //    B = 2,
+            //    BB = 22,
+            //    C = 2.123m,
+            //    CC = 2.223m,
+            //    D = true,
+            //    DD = false
+            //};
+            //sampleB.PropertyChanged += (obj, args) =>
+            //{
+            //    _logger.LogInformation("sample.PropertyChanged:{0}", args.PropertyName);
+            //};
+            //sampleB.A += "_";
+            //sampleB.B += 20;
+            //sampleB.C += 20.999m;
+            //sampleB.D = false;
+            //sampleB.MethodB();
+            //sampleB.MethodTimeB("BBBTime");
 
             #endregion
 
