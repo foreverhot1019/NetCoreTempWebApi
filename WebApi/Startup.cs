@@ -214,13 +214,18 @@ namespace NetCoreTemp.WebApi
             //授权
             services.AddAuthorization(x =>
             {
+                //多种认证模式（Cookie和JWT同时使用）
+                //var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                //    JwtBearerDefaults.AuthenticationScheme,
+                //    CookieAuthenticationDefaults.AuthenticationScheme);
+
                 //自定义策略
                 x.AddPolicy("Michael", policy =>
                 {
                     policy.RequireClaim("Michael");
                 });
                 //默认策略
-                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder("Bearer")
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .RequireClaim("Michael");
                 x.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
