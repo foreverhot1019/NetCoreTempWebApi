@@ -36,6 +36,12 @@ namespace NetCoreTemp.WebApi.Services
         // Required
         public FodyLogAttribute() { }
 
+        /// <summary>
+        /// AOP初始化
+        /// </summary>
+        /// <param name="instance">调用实例</param>
+        /// <param name="method">实例方法</param>
+        /// <param name="args">参数</param>
         public void Init(object instance, MethodBase method, object[] args)
         {
             _logger = FodyDIService.GetILogger<FodyLogAttribute>();
@@ -44,18 +50,28 @@ namespace NetCoreTemp.WebApi.Services
             _args = args;
         }
 
+        /// <summary>
+        /// 进入方法事件
+        /// </summary>
         public void OnEntry()
         {
             var MsgStr = $"{_instance.GetType().Name}- {_method.Name} Start Excute";
             _logger.LogInformation(MsgStr);
         }
 
+        /// <summary>
+        /// 出错事件
+        /// </summary>
+        /// <param name="exception"></param>
         public void OnException(Exception exception)
         {
             var MsgStr = $"{_instance.GetType().Name}- {_method.Name} Error";
             _logger.LogError(exception, MsgStr);
         }
 
+        /// <summary>
+        /// 方法结束事件
+        /// </summary>
         public void OnExit()
         {
             var MsgStr = $"{_instance.GetType().Name}- {_method.Name} End Excute(Elapsed:{DateTime.Now.Subtract(dtElapsed).TotalSeconds}s)";
@@ -108,6 +124,12 @@ namespace NetCoreTemp.WebApi.Services
             }
         }
 
+        /// <summary>
+        /// AOP初始化
+        /// </summary>
+        /// <param name="instance">调用实例</param>
+        /// <param name="method">实例方法</param>
+        /// <param name="args">参数</param>
         public void Init(object instance, MethodBase method, object[] args)
         {
             _logger = FodyDIService.GetILogger<IntersectMethodsMarkedByAttribute>();
@@ -116,18 +138,27 @@ namespace NetCoreTemp.WebApi.Services
             _args = args;
         }
 
+        /// <summary>
+        /// 进入方法事件
+        /// </summary>
         public void OnEntry()
         {
             var MsgStr = $"{_instance.GetType().Name}- {_method.Name} Start Excute";
             _logger.LogInformation(MsgStr);
         }
 
+        /// <summary>
+        /// 出错事件
+        /// </summary>
         public void OnException(Exception exception)
         {
             var MsgStr = $"{_instance.GetType().Name}- {_method.Name} Error";
             _logger.LogError(exception, MsgStr);
         }
 
+        /// <summary>
+        /// 方法结束事件
+        /// </summary>
         public void OnExit()
         {
             var MsgStr = $"{_instance.GetType().Name}- {_method.Name} End Excute(Elapsed:{DateTime.Now.Subtract(dtElapsed).TotalSeconds}s)";
