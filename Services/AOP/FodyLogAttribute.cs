@@ -14,9 +14,12 @@ using NetCoreTemp.WebApi.Services.AOP;
 using NetCoreTemp.WebApi.Services.FodyTest;
 using PropertyChanged;
 
-//[module: FodyLogAttribute]
-//[assembly: FodyLogAttribute]
+// Attribute should be "registered" by adding as module or assembly custom attribute
+[module: FodyLogAttribute]
+//对多个自定义Attribute，拦截织入切片代码（IntersectMethodsMarkedBy名称不能改）
 [module: IntersectMethodsMarkedBy(typeof(MyAopLogAttr), typeof(MyAopLogAttrA))]
+//静态类重写读取哪个程序集下的（如：PropertyChangedNotificationInterceptor 分别在Services与Services.FodyTest中，将读取Services中的）
+//[assembly: PropertyChanged.FilterType("NetCoreTemp.WebApi.Services")]
 namespace NetCoreTemp.WebApi.Services
 {
     /// <summary>
@@ -95,6 +98,7 @@ namespace NetCoreTemp.WebApi.Services
     }
 
     /// <summary>
+    /// 指定方法或构造函数上的日志属性
     /// 拦截多个自定义Attrbute（AttributeTargets只能是Method或Constructor）
     /// IntersectMethodsMarkedByAttribute不能改变名称
     /// </summary>
