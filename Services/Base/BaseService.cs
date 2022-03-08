@@ -3,6 +3,7 @@ using NetCoreTemp.WebApi.Models.DatabaseContext;
 using NetCoreTemp.WebApi.Models.View_Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace NetCoreTemp.WebApi.Services.Base
     public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : class, NetCoreTemp.WebApi.Models.BaseModel.IEntity_
     {
         private readonly AppDbContext _context;
-        private ILogger<BaseService<TEntity>> _logger;
+        private readonly ILogger<BaseService<TEntity>> _logger;
+        private readonly IServiceProvider _serviceProvider;
 
-        public BaseService(AppDbContext  appDbContext, ILogger<BaseService<TEntity>> logger)
+        public BaseService(AppDbContext  appDbContext, ILogger<BaseService<TEntity>> logger,IServiceProvider serviceProvider)
         {
             _context = appDbContext;
             _logger = logger;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -130,6 +133,16 @@ namespace NetCoreTemp.WebApi.Services.Base
         {
             _logger.LogInformation($"Update-{OTEntity}");
             _context.Set<TEntity>().Update(OTEntity);
+        }
+
+        /// <summary>
+        /// 获取Service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <returns></returns>
+        public TService GetService<TService>() where TService: IEntityService
+        {
+            return _serviceProvider.GetService<TService>();
         }
     }
 }
