@@ -173,8 +173,6 @@ namespace NetCoreTemp.WebApi
                         var error = context.Exception;
                         context.Response.StatusCode = 401;
                         context.Response.ContentType = "application/json";
-                        //跨域时，设置WithExposedHeaders，否则无法读取到数据
-                        context.Response.Headers.Add("x-token-failed", "true");
 
                         var actResultMsg = new ActionReturnMessage
                         {
@@ -235,14 +233,19 @@ namespace NetCoreTemp.WebApi
             {
                 options.AddPolicy("CorsPolicy", policy =>
                 {
-                    var http = Configuration.GetValue<string>("Kestrel.Endpoints.Http") ?? "http://localhost:5000";
-                    var tls = Configuration.GetValue<string>("Kestrel.Endpoints.Https") ?? "https://localhost:5001";
-                    policy.WithOrigins(new string[] {
+                    var http = Configuration.GetValue<string>("Cors.Origins") ?? "http://localhost:8080";
+                    policy
+                    //.AllowAnyOrigin()//前端设置withCredentials时 chrome不允许*
+                    .WithOrigins(new string[] {
                         "http://localhost:9526",
                         "http://localhost:9527",
-                        http,
-                        tls
-                    }).AllowAnyHeader().AllowAnyMethod()
+                        http
+                    })
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    /*前端设置withCredentials=true时，AllowCredentials必须设置,可以配合SetIsOriginAllowed组合使用 */
+                    //.AllowCredentials()
+                    //.SetIsOriginAllowed(_ => true)
                     /* 浏览器默认响应头
                      * Cache-Control
                      * Content-Language
@@ -251,8 +254,9 @@ namespace NetCoreTemp.WebApi
                      * Last-Modified
                      * Pragma
                     */
-                    .WithExposedHeaders("x-token-failed", "Content-Disposition", "server-login")
-                    .AllowCredentials();
+                    .WithExposedHeaders("Content-Disposition", "server-login");
+                    // 指定可缓存对预检请求的响应的时间长度
+                    policy.SetPreflightMaxAge(TimeSpan.FromSeconds(3600));
                 });
             });
             services.AddMemoryCache();
@@ -369,9 +373,6 @@ namespace NetCoreTemp.WebApi
             services.AddLogging(config => {
                 config.AddLog4Net();
             });
-            ////注册静态依赖注入实例,以便Fody和其他地方使用
-            //FodyGetService.Configration(services.BuildServiceProvider());
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -380,6 +381,7 @@ namespace NetCoreTemp.WebApi
             IServiceProvider serviceProvider = app.ApplicationServices;
             //为了 实现ConfigServices里的 serviceProvider的实例
             serviceProvider.GetService<IModelValidatorProvider>();
+            //注册静态依赖注入实例,以便Fody和其他地方使用
             Services.AOP.FodyDIService.Configration(serviceProvider);
 
             if (env.IsDevelopment())

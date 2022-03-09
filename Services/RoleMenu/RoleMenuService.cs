@@ -17,8 +17,9 @@ namespace NetCoreTemp.WebApi.Services
         private RoleMenuQuery _searchQuery;
 
         public RoleMenuService(ILogger<RoleMenuService> logger,
-            AppDbContext appDbContext) :
-            base(appDbContext, logger)
+            AppDbContext appDbContext,
+            IServiceProvider serviceProvider) :
+            base(serviceProvider, logger)
         {
             _context = appDbContext;
             _logger = logger;

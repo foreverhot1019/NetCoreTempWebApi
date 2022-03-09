@@ -18,8 +18,9 @@ namespace NetCoreTemp.WebApi.Services
         private UserRoleQuery _searchQuery;
 
         public UserRoleService(ILogger<UserRoleService> logger,
-            AppDbContext appDbContext) :
-            base(appDbContext, logger)
+            AppDbContext appDbContext,
+            IServiceProvider serviceProvider) :
+            base(serviceProvider, logger)
         {
             _context = appDbContext;
             _logger = logger;

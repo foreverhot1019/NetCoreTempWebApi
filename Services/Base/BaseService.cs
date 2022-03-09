@@ -18,9 +18,9 @@ namespace NetCoreTemp.WebApi.Services.Base
         private readonly ILogger<BaseService<TEntity>> _logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public BaseService(AppDbContext  appDbContext, ILogger<BaseService<TEntity>> logger,IServiceProvider serviceProvider)
+        public BaseService(IServiceProvider serviceProvider, ILogger<BaseService<TEntity>> logger)
         {
-            _context = appDbContext;
+            _context = serviceProvider.GetRequiredService<AppDbContext>();
             _logger = logger;
             _serviceProvider = serviceProvider;
         }

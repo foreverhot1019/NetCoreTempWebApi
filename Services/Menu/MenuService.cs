@@ -16,11 +16,11 @@ namespace NetCoreTemp.WebApi.Services
         private ILogger<MenuService> _logger;
         private MenuQuery _searchQuery;
 
-        public MenuService(ILogger<MenuService> logger,
-            AppDbContext appDbContext) :
-            base(appDbContext, logger)
+        public MenuService(AppDbContext appDbContext, ILogger<MenuService> logger,
+            IServiceProvider serviceProvider) :
+            base(serviceProvider, logger)
         {
-            _context = appDbContext;
+            _context = (AppDbContext)serviceProvider.GetService(typeof(AppDbContext));
             _logger = logger;
             _searchQuery = new MenuQuery();
         }

@@ -17,8 +17,9 @@ namespace NetCoreTemp.WebApi.Services
         private ILogger<UserService> _logger;
         private UserQuery _searchQuery;
 
-        public UserService(AppDbContext appDbContext, ILogger<UserService> logger) :
-            base(appDbContext, logger)
+        public UserService(AppDbContext appDbContext, ILogger<UserService> logger,
+            IServiceProvider serviceProvider) :
+            base(serviceProvider, logger)
         {
             _context = appDbContext;
             _logger = logger;
