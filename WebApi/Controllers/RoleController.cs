@@ -67,7 +67,7 @@ namespace NetCoreTemp.WebApi.Controllers
         /// <param name="limit">每页条数</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<PpagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
+        public async Task<PagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
         {
             List<filterRule> filterRules = new List<filterRule>();
             if (!string.IsNullOrEmpty(searhFilters))
@@ -106,7 +106,7 @@ namespace NetCoreTemp.WebApi.Controllers
                 role.ArrMenu = GetMenus(roleAllMenu).ToList();
             }
 
-            return new PpagenationResult
+            return new PagenationResult
             {
                 ArrData = ArrRole.Select(x => x.ToDto()),
                 PageNationToken = _paginationToken,

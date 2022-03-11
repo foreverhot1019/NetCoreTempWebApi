@@ -16,8 +16,8 @@ namespace NetCoreTemp.WebApi.Models.BaseModel
         /// 主键
         /// </summary>
         TKey ID { 
-            get { return (TKey)_ID; } 
-            set { _ID = value; }
+            get { return (TKey)ID_; } 
+            set { ID_ = value; }
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace NetCoreTemp.WebApi.Models.BaseModel
     /// </summary>
     public interface IEntity_
     {
-        Object _ID { get; set; }
+        Object ID_ { get; set; }
 
         [NotMapped]
         Guid EntityGuid { get; set; }

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreTemp.MVC", "NetCoreT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonLanguage", "CommonLanguage\CommonLanguage.csproj", "{F56355E9-F9DA-46EE-B6FB-36919C3DCA19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalizerCustomValidation", "CustomValidation\LocalizerCustomValidation.csproj", "{A091E01C-688C-42F3-A952-614418C0D092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalizerCustomValidation", "CustomValidation\LocalizerCustomValidation.csproj", "{A091E01C-688C-42F3-A952-614418C0D092}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreTempXUnit", "NetCoreTempXUnit\NetCoreTempXUnit.csproj", "{B8A91AB2-0DC2-4825-A588-95F1FAC0C99A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,12 +59,16 @@ Global
 		{A091E01C-688C-42F3-A952-614418C0D092}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A091E01C-688C-42F3-A952-614418C0D092}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A091E01C-688C-42F3-A952-614418C0D092}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8A91AB2-0DC2-4825-A588-95F1FAC0C99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8A91AB2-0DC2-4825-A588-95F1FAC0C99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8A91AB2-0DC2-4825-A588-95F1FAC0C99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8A91AB2-0DC2-4825-A588-95F1FAC0C99A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D34B8931-FA31-452A-8B98-4D9712DACD06}
 		RESX_NeutralResourcesLanguage = zh-HK
+		SolutionGuid = {D34B8931-FA31-452A-8B98-4D9712DACD06}
 	EndGlobalSection
 EndGlobal

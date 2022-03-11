@@ -42,7 +42,7 @@ namespace NetCoreTemp.WebApi.Controllers
         /// <returns></returns>
         // GET: api/<MenuController>
         [HttpGet]
-        public async Task<PpagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
+        public async Task<PagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
         {
             List<filterRule> filterRules = new List<filterRule>();
             if (!string.IsNullOrEmpty(searhFilters))
@@ -65,7 +65,7 @@ namespace NetCoreTemp.WebApi.Controllers
             IEnumerable<Menu> ArrMenu;
             long rowsCount;
             (ArrMenu, rowsCount) = _menuService.QueryByFilterRules(filterRules).SelectPage(page, limit);
-            return new PpagenationResult
+            return new PagenationResult
             {
                 ArrData = ArrMenu.Select(x => x.ToDto()),
                 RowsCount = rowsCount

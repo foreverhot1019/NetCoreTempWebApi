@@ -7,9 +7,9 @@ namespace NetCoreTemp.WebApi.Models.View_Model
     /// <summary>
     /// 翻页返回集合
     /// </summary>
-    public sealed class PpagenationResult
+    public sealed class PagenationResult
     {
-        public PpagenationResult()
+        public PagenationResult()
         {
 
         }
@@ -22,7 +22,7 @@ namespace NetCoreTemp.WebApi.Models.View_Model
         /// <summary>
         /// 每页显示
         /// </summary>
-        public int pagelimit { get; set; }
+        public int pageLimit { get; set; }
 
         /// <summary>
         /// 页码token

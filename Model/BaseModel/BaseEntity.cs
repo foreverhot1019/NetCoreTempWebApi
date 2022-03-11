@@ -18,10 +18,10 @@ namespace NetCoreTemp.WebApi.Models.BaseModel
         [Display(Name = "主键", Description = "主键")]
         [Required]
         //[MaxLength(50)]
-        public virtual Guid ID { get { return (Guid)_ID; } set { _ID = value; } }
+        public virtual Guid ID { get { return (Guid)ID_; } set { ID_ = value; } }
 
         [NotMapped]
-        public Object _ID { get; set; } = "-";
+        public Object ID_ { get; set; } = Guid.NewGuid();
 
         [Display(Name = "状态", Description = "状态")]
         [DefaultValue(1)]

@@ -15,11 +15,11 @@ namespace NetCoreTemp.WebApi.Models.DatabaseContext
 
         #region 表
 
-        public DbSet<User> User { get; set; }
-        public DbSet<Menu> Menu { get; set; }
-        public DbSet<Role> Role { get; set; }
-        public DbSet<UserRole> UserRole { get; set; }
-        public DbSet<RoleMenu> RoleMenu { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Menu> Menu { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<UserRole> UserRole { get; set; }
+        public virtual DbSet<RoleMenu> RoleMenu { get; set; }
 
         #endregion
 

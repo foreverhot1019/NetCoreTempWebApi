@@ -17,11 +17,11 @@ namespace NetCoreTemp.WebApi.Services
         private ILogger<UserService> _logger;
         private UserQuery _searchQuery;
 
-        public UserService(AppDbContext appDbContext, ILogger<UserService> logger,
+        public UserService(ILogger<UserService> logger,
             IServiceProvider serviceProvider) :
             base(serviceProvider, logger)
         {
-            _context = appDbContext;
+            _context = base.GetDBContext();
             _logger = logger;
             _searchQuery = new UserQuery();
         }

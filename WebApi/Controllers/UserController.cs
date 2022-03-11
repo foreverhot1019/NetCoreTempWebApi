@@ -56,7 +56,7 @@ namespace NetCoreTemp.WebApi.Controllers
         /// <returns></returns>
         // GET: api/<UserController>
         [HttpGet]
-        public async Task<PpagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
+        public async Task<PagenationResult> Get(string searhFilters = null, int page = 0, int limit = 10)
         {
             List<filterRule> filterRules = new List<filterRule>();
             if (!string.IsNullOrEmpty(searhFilters))
@@ -77,7 +77,7 @@ namespace NetCoreTemp.WebApi.Controllers
             var sub = User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault()?.Value;
             var TmpUser = _userService.QueryByFilterRules(filterRules).SelectPage(page,limit);
             var ArrUserDto = TmpUser.ArrEntity.Select(x => x.ToDto()).ToList();
-            return new PpagenationResult
+            return new PagenationResult
             {
                 ArrData = ArrUserDto,
                 RowsCount = TmpUser.rowsCount

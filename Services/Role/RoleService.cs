@@ -17,11 +17,10 @@ namespace NetCoreTemp.WebApi.Services
         private RoleQuery _searchQuery;
 
         public RoleService(ILogger<RoleService> logger,
-            AppDbContext appDbContext,
             IServiceProvider serviceProvider) :
             base(serviceProvider, logger)
         {
-            _context = appDbContext;
+            _context = base.GetDBContext();
             _logger = logger;
             _searchQuery = new RoleQuery();
         }
