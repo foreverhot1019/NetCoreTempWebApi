@@ -48,7 +48,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 获取账户列表
         /// </summary>
         /// <param name="searhFilters">搜索条件</param>
         /// <param name="pageNationToken">分页token</param>
@@ -84,6 +84,12 @@ namespace NetCoreTemp.WebApi.Controllers
             };
         }
 
+        /// <summary>
+        /// 获取{id}账户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="rangkey"></param>
+        /// <returns></returns>
         // GET api/<UserController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id, [FromQuery] long? rangkey = null)
@@ -104,6 +110,11 @@ namespace NetCoreTemp.WebApi.Controllers
             return Ok(user.ToDto());
         }
 
+        /// <summary>
+        /// 新增账户
+        /// </summary>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
         // POST api/<UserController>
         [HttpPost]
         public async Task Post([FromBody] UserDto userDto)
@@ -149,6 +160,12 @@ namespace NetCoreTemp.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// 修改账户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public async Task Put(string id, [FromBody] UserDto userDto)
@@ -191,6 +208,11 @@ namespace NetCoreTemp.WebApi.Controllers
             _userService.Update(data_userDto.ToEntity());
         }
 
+        /// <summary>
+        /// 删除账户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)

@@ -72,7 +72,8 @@ namespace NetCoreTemp.WebApi
                 opts.Filters.Add<ApiBaseAuthorizeFilter>();//全局权限认证
                 opts.Filters.Add<ApiBaseActionFilter>();//全局Action统一格式返回
                 //opts.ModelValidatorProviders.Add(new MyModelValidatorProvider());
-            }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix) //启用razor 引擎的时候起作用
             .AddDataAnnotationsLocalization(opts =>
             {
                 opts.DataAnnotationLocalizerProvider = (type, factory) =>
@@ -259,7 +260,10 @@ namespace NetCoreTemp.WebApi
                     policy.SetPreflightMaxAge(TimeSpan.FromSeconds(3600));
                 });
             });
+            //缓存
             services.AddMemoryCache();
+
+            #region redis
 
             //RedisCache
             services.AddStackExchangeRedisCache(options =>
@@ -270,8 +274,6 @@ namespace NetCoreTemp.WebApi
                 var assemblyName = Assembly.GetExecutingAssembly().GetName();
                 options.InstanceName = assemblyName.Name;
             });
-
-            #region redis
 
             services.AddRedisMultiplexer(Configuration);
 
@@ -373,6 +375,12 @@ namespace NetCoreTemp.WebApi
             services.AddLogging(config => {
                 config.AddLog4Net();
             });
+
+            #region Swagger
+
+            services.AddSwaggerGen();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -387,8 +395,10 @@ namespace NetCoreTemp.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             //跨域
             app.UseCors("CorsPolicy");
@@ -466,6 +476,7 @@ namespace NetCoreTemp.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapSwagger();
             });
         }
 

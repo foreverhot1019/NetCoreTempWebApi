@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,6 +23,9 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
+    <PackageReference Include="FreeSpire.PDF" Version="8.2.0" />
+    <PackageReference Include="GemBox.Document" Version="27.3.30.1269" />
+    <PackageReference Include="GemBox.Pdf" Version="13.0.1100" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
       <PrivateAssets>all</PrivateAssets>
@@ -31,12 +35,15 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
     <PackageReference Include="MiniExcel" Version="1.23.2" />
     <PackageReference Include="NPOI" Version="2.5.5" />
+    <PackageReference Include="NPOI.Word2Html" Version="1.0.2" />
+    <PackageReference Include="OpenXmlPowerTools.NetStandard" Version="4.6.0" />
     <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
     <PackageReference Include="Quartz" Version="3.3.3" />
     <PackageReference Include="Quartz.AspNetCore" Version="3.3.3" />
     <PackageReference Include="Quartz.Jobs" Version="3.3.3" />
     <PackageReference Include="Quartz.Plugins" Version="3.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>

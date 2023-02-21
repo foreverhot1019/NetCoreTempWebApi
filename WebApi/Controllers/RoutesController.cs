@@ -17,6 +17,12 @@ namespace NetCoreTemp.WebApi.Controllers
         {
             _logger = logger;
         }
+
+        /// <summary>
+        /// 获取所有路由
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var obj = new

@@ -106,7 +106,7 @@ namespace NetCoreTemp.WebApi.Extensions
                 }
                 else
                 {
-                    if (!(context.Result is FileResult))
+                    if (!(context.Result is FileResult || context.Result is ContentResult))
                     {
                         context.Result = new JsonResult(new ActionReturnMessage
                         {

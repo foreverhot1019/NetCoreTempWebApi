@@ -34,7 +34,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 获取菜单
         /// </summary>
         /// <param name="filterRules">搜索条件</param>
         /// <param name="pageNationToken">分页token</param>
@@ -72,6 +72,11 @@ namespace NetCoreTemp.WebApi.Controllers
             };
         }
 
+        /// <summary>
+        /// 获取{id}菜单数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<MenuController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
@@ -88,6 +93,11 @@ namespace NetCoreTemp.WebApi.Controllers
             return StatusCode(404, "数据不存在");
         }
 
+        /// <summary>
+        /// 新增菜单
+        /// </summary>
+        /// <param name="menuDto"></param>
+        /// <returns></returns>
         // POST api/<MenuController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MenuDto menuDto)
@@ -102,6 +112,12 @@ namespace NetCoreTemp.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// 修改菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="menuDto"></param>
+        /// <returns></returns>
         // PUT api/<MenuController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] MenuDto menuDto)
@@ -118,6 +134,11 @@ namespace NetCoreTemp.WebApi.Controllers
                 return StatusCode(404, "数据不存在");
         }
 
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE api/<MenuController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)

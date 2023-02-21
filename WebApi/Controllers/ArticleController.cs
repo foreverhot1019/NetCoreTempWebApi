@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace NetCoreTemp.WebApi.Controllers
 {
+    /// <summary>
+    /// 文章
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ArticleController : ControllerBase
@@ -18,6 +21,13 @@ namespace NetCoreTemp.WebApi.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// 获取文章列表
+        /// </summary>
+        /// <param name="page">页码</param>
+        /// <param name="limit">展示条数</param>
+        /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> list(int page = 0, int limit = 10)
         {
             var items = new List<object> {

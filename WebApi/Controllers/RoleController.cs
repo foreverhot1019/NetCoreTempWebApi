@@ -33,7 +33,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 获取无限自己
+        /// 获取无限子集
         /// </summary>
         /// <param name="AllMenu">所有的Menu（排除已用过的MenuId过后的数据）</param>
         /// <param name="ArrUseId">已用过的MenuId</param>
@@ -247,7 +247,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 获取{id}权限信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -272,7 +272,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 新增数据
+        /// 新增权限
         /// </summary>
         /// <param name="roleDto"></param>
         /// <returns></returns>
@@ -328,7 +328,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 更新数据
+        /// 更新权限
         /// </summary>
         /// <param name="roleDto"></param>
         /// <returns></returns>
@@ -339,7 +339,7 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 更新数据
+        /// 删除权限
         /// </summary>
         /// <param name="roleDto"></param>
         /// <returns></returns>
@@ -375,10 +375,11 @@ namespace NetCoreTemp.WebApi.Controllers
         }
 
         /// <summary>
-        /// 根据账户获取
+        /// 根据账户获取权限
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
+        [HttpGet("getRolesByUserId")]
         public async Task<IAsyncResult> getRolesByUserId(string Id)
         {
             return Task.FromResult(Ok());
